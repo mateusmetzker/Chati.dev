@@ -1,7 +1,6 @@
-import { mkdirSync, writeFileSync, copyFileSync, existsSync, readFileSync } from 'fs';
+import { mkdirSync, writeFileSync, copyFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import yaml from 'js-yaml';
 import { IDE_CONFIGS } from '../config/ide-configs.js';
 import { generateClaudeMCPConfig } from '../config/mcp-configs.js';
 import { generateSessionYaml, generateConfigYaml, generateClaudeMd } from './templates.js';
@@ -38,7 +37,7 @@ export async function installFramework(config) {
     'agents/clarity', 'agents/quality', 'agents/build', 'agents/deploy',
     'templates', 'workflows', 'quality-gates',
     'schemas', 'frameworks', 'intelligence', 'patterns',
-    'i18n', 'migrations',
+    'i18n', 'migrations', 'data',
     'artifacts/0-WU', 'artifacts/1-Brief', 'artifacts/2-PRD',
     'artifacts/3-Architecture', 'artifacts/4-UX', 'artifacts/5-Phases',
     'artifacts/6-Tasks', 'artifacts/7-QA-Planning', 'artifacts/8-Validation',
@@ -47,6 +46,27 @@ export async function installFramework(config) {
 
   for (const dir of frameworkDirs) {
     createDir(join(frameworkDir, dir));
+  }
+
+  // Create .chati/memories/ directory tree for Memory Layer
+  const memoriesBase = join(targetDir, '.chati', 'memories');
+  const memoryDirs = [
+    'shared/durable', 'shared/daily', 'shared/session',
+    'greenfield-wu/durable', 'greenfield-wu/daily',
+    'brownfield-wu/durable', 'brownfield-wu/daily',
+    'brief/durable', 'brief/daily',
+    'detail/durable', 'detail/daily',
+    'architect/durable', 'architect/daily',
+    'ux/durable', 'ux/daily',
+    'phases/durable', 'phases/daily',
+    'tasks/durable', 'tasks/daily',
+    'qa-planning/durable', 'qa-planning/daily',
+    'qa-implementation/durable', 'qa-implementation/daily',
+    'dev/durable', 'dev/daily',
+    'devops/durable', 'devops/daily',
+  ];
+  for (const dir of memoryDirs) {
+    createDir(join(memoriesBase, dir));
   }
 
   // Copy framework files from source
@@ -115,6 +135,8 @@ function copyFrameworkFiles(destDir) {
     'schemas/session.schema.json',
     'schemas/config.schema.json',
     'schemas/task.schema.json',
+    'schemas/context.schema.json',
+    'schemas/memory.schema.json',
     // Frameworks
     'frameworks/quality-dimensions.yaml',
     'frameworks/decision-heuristics.yaml',
@@ -122,6 +144,9 @@ function copyFrameworkFiles(destDir) {
     'intelligence/gotchas.yaml',
     'intelligence/patterns.yaml',
     'intelligence/confidence.yaml',
+    'intelligence/context-engine.md',
+    'intelligence/memory-layer.md',
+    'intelligence/decision-engine.md',
     // Patterns
     'patterns/elicitation.md',
     // i18n
@@ -131,6 +156,8 @@ function copyFrameworkFiles(destDir) {
     'i18n/fr.yaml',
     // Migrations
     'migrations/v1.0-to-v1.1.yaml',
+    // Data
+    'data/entity-registry.yaml',
   ];
 
   for (const file of filesToCopy) {
@@ -182,11 +209,11 @@ This is a thin router. All logic lives in the orchestrator.
     }
   } else {
     // For other IDEs, create a rules file pointing to chati.dev/
-    const rulesContent = `# chati.dev Framework Rules
+    const rulesContent = `# chati.dev System Rules
 # This file configures ${config.name} to work with chati.dev
 
-## Framework Location
-All framework content is in the \`chati.dev/\` directory.
+## System Location
+All system content is in the \`chati.dev/\` directory.
 
 ## Session State
 Runtime session state is in \`.chati/session.yaml\` (IDE-agnostic).

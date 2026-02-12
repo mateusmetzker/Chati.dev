@@ -2,8 +2,19 @@
 * text=auto eol=lf
 
 # Markdown
-*.md text linguist-documentation=false
-*.md diff=markdown
+*.md text diff=markdown
+
+# Community / meta files — documentation (excluded from GitHub language stats)
+README.md linguist-documentation
+CHANGELOG.md linguist-documentation
+CONTRIBUTING.md linguist-documentation
+CODE_OF_CONDUCT.md linguist-documentation
+SECURITY.md linguist-documentation
+CLAUDE.md linguist-documentation
+.github/**/*.md linguist-documentation
+
+# Agent specs and system .md files count as product (no override needed)
+# chati.dev/**/*.md — detected as Markdown by default
 
 # YAML
 *.yaml text
@@ -25,6 +36,8 @@
 *.ico binary
 *.tgz binary
 
-# Force GitHub language statistics
-*.md linguist-detectable=true
+# GitHub language statistics
 *.js linguist-detectable=true
+*.json linguist-detectable=true
+*.yaml linguist-detectable=true
+*.yml linguist-detectable=true

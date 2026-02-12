@@ -23,7 +23,8 @@ CLAUDE.md
 *.swp
 *.swo
 
-# Build
+# Build / Generated
 dist/
 build/
 *.tgz
+packages/chati-dev/framework/

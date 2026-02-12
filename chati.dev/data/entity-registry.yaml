@@ -1,0 +1,399 @@
+# chati.dev Entity Registry — Central Catalog of All System Artifacts
+# Used by the Decision Engine for REUSE/ADAPT/CREATE recommendations
+# and by the Health Check for system integrity validation.
+
+metadata:
+  version: "1.0.0"
+  last_updated: "2026-02-12T00:00:00Z"
+  entity_count: 47
+  checksum_algorithm: sha256
+
+entities:
+  agents:
+    orchestrator:
+      path: chati.dev/orchestrator/chati.md
+      type: agent
+      purpose: "Route user requests to correct agent, manage session state and deviations"
+      keywords: [routing, session, deviation, handoff, mode-governance]
+      dependencies: [constitution, session-schema, config]
+      adaptability: 0.2
+
+    greenfield-wu:
+      path: chati.dev/agents/clarity/greenfield-wu.md
+      type: agent
+      purpose: "Analyze greenfield project context, constraints, and technology landscape"
+      keywords: [greenfield, analysis, context, technology, constraints]
+      dependencies: [session-schema]
+      adaptability: 0.5
+
+    brownfield-wu:
+      path: chati.dev/agents/clarity/brownfield-wu.md
+      type: agent
+      purpose: "Deep discovery of existing codebase — architecture, patterns, debt, dependencies"
+      keywords: [brownfield, discovery, codebase, architecture, debt]
+      dependencies: [session-schema, decision-engine]
+      adaptability: 0.5
+
+    brief:
+      path: chati.dev/agents/clarity/brief.md
+      type: agent
+      purpose: "Extract and structure user requirements through 5 elicitation phases"
+      keywords: [requirements, elicitation, brief, functional, non-functional]
+      dependencies: [session-schema]
+      adaptability: 0.4
+
+    detail:
+      path: chati.dev/agents/clarity/detail.md
+      type: agent
+      purpose: "Transform Brief into formal PRD with complete specifications"
+      keywords: [prd, specification, detail, formal, requirements]
+      dependencies: [prd-template, session-schema]
+      adaptability: 0.4
+
+    architect:
+      path: chati.dev/agents/clarity/architect.md
+      type: agent
+      purpose: "Design technical architecture, make technology decisions, define system boundaries"
+      keywords: [architecture, technology, design, patterns, boundaries]
+      dependencies: [fullstack-architecture-template, session-schema]
+      adaptability: 0.3
+
+    ux:
+      path: chati.dev/agents/clarity/ux.md
+      type: agent
+      purpose: "Design user experience, interaction flows, and interface structure"
+      keywords: [ux, design, interaction, flows, interface, wireframes]
+      dependencies: [session-schema]
+      adaptability: 0.5
+
+    phases:
+      path: chati.dev/agents/clarity/phases.md
+      type: agent
+      purpose: "Decompose PRD into development phases with MVP-first strategy"
+      keywords: [phases, decomposition, mvp, planning, milestones]
+      dependencies: [session-schema]
+      adaptability: 0.4
+
+    tasks:
+      path: chati.dev/agents/clarity/tasks.md
+      type: agent
+      purpose: "Create executable tasks with acceptance criteria from phase definitions"
+      keywords: [tasks, acceptance-criteria, executable, given-when-then]
+      dependencies: [task-template, session-schema]
+      adaptability: 0.4
+
+    qa-planning:
+      path: chati.dev/agents/quality/qa-planning.md
+      type: agent
+      purpose: "Validate traceability and consistency across all clarity artifacts"
+      keywords: [qa, traceability, consistency, validation, quality-gate]
+      dependencies: [qa-gate-template, planning-gate, session-schema]
+      adaptability: 0.3
+
+    qa-implementation:
+      path: chati.dev/agents/quality/qa-implementation.md
+      type: agent
+      purpose: "Validate implementation against specifications — tests, SAST, code review"
+      keywords: [qa, implementation, tests, sast, code-review]
+      dependencies: [qa-gate-template, implementation-gate, session-schema]
+      adaptability: 0.3
+
+    dev:
+      path: chati.dev/agents/build/dev.md
+      type: agent
+      purpose: "Implement features following task specifications and architecture decisions"
+      keywords: [development, implementation, coding, features]
+      dependencies: [session-schema]
+      adaptability: 0.5
+
+    devops:
+      path: chati.dev/agents/deploy/devops.md
+      type: agent
+      purpose: "Deploy, configure CI/CD, manage infrastructure and releases"
+      keywords: [deploy, cicd, infrastructure, releases, git]
+      dependencies: [session-schema]
+      adaptability: 0.4
+
+  templates:
+    prd:
+      path: chati.dev/templates/prd-tmpl.yaml
+      type: template
+      purpose: "Product Requirements Document template for greenfield projects"
+      keywords: [prd, requirements, document, greenfield]
+      dependencies: []
+      adaptability: 0.6
+
+    brownfield-prd:
+      path: chati.dev/templates/brownfield-prd-tmpl.yaml
+      type: template
+      purpose: "PRD template adapted for brownfield projects with existing codebase analysis"
+      keywords: [prd, brownfield, existing, codebase]
+      dependencies: []
+      adaptability: 0.6
+
+    fullstack-architecture:
+      path: chati.dev/templates/fullstack-architecture-tmpl.yaml
+      type: template
+      purpose: "Architecture document template for full-stack applications"
+      keywords: [architecture, fullstack, system-design, technology]
+      dependencies: []
+      adaptability: 0.7
+
+    task:
+      path: chati.dev/templates/task-tmpl.yaml
+      type: template
+      purpose: "Task template with acceptance criteria in Given-When-Then format"
+      keywords: [task, acceptance-criteria, given-when-then]
+      dependencies: []
+      adaptability: 0.7
+
+    qa-gate:
+      path: chati.dev/templates/qa-gate-tmpl.yaml
+      type: template
+      purpose: "Quality gate report template for QA agents"
+      keywords: [qa, gate, report, validation]
+      dependencies: []
+      adaptability: 0.6
+
+  workflows:
+    greenfield-fullstack:
+      path: chati.dev/workflows/greenfield-fullstack.yaml
+      type: workflow
+      purpose: "Full pipeline for new greenfield fullstack projects"
+      keywords: [greenfield, fullstack, pipeline, complete]
+      dependencies: [orchestrator]
+      adaptability: 0.3
+
+    brownfield-discovery:
+      path: chati.dev/workflows/brownfield-discovery.yaml
+      type: workflow
+      purpose: "Deep discovery workflow for existing codebases"
+      keywords: [brownfield, discovery, analysis, existing]
+      dependencies: [orchestrator, brownfield-wu]
+      adaptability: 0.4
+
+    brownfield-fullstack:
+      path: chati.dev/workflows/brownfield-fullstack.yaml
+      type: workflow
+      purpose: "Full pipeline for brownfield projects after discovery"
+      keywords: [brownfield, fullstack, pipeline]
+      dependencies: [orchestrator]
+      adaptability: 0.3
+
+    brownfield-ui:
+      path: chati.dev/workflows/brownfield-ui.yaml
+      type: workflow
+      purpose: "UI-focused workflow for brownfield frontend changes"
+      keywords: [brownfield, ui, frontend, interface]
+      dependencies: [orchestrator]
+      adaptability: 0.5
+
+    brownfield-service:
+      path: chati.dev/workflows/brownfield-service.yaml
+      type: workflow
+      purpose: "Service-focused workflow for brownfield backend changes"
+      keywords: [brownfield, service, backend, api]
+      dependencies: [orchestrator]
+      adaptability: 0.5
+
+  schemas:
+    session:
+      path: chati.dev/schemas/session.schema.json
+      type: schema
+      purpose: "JSON schema for .chati/session.yaml runtime state"
+      keywords: [session, state, validation, runtime]
+      dependencies: []
+      adaptability: 0.2
+
+    config:
+      path: chati.dev/schemas/config.schema.json
+      type: schema
+      purpose: "JSON schema for chati.dev/config.yaml system configuration"
+      keywords: [config, validation, installation]
+      dependencies: []
+      adaptability: 0.2
+
+    context:
+      path: chati.dev/schemas/context.schema.json
+      type: schema
+      purpose: "JSON schema for <chati-context> block structure"
+      keywords: [context, bracket, injection, validation]
+      dependencies: []
+      adaptability: 0.2
+
+    memory:
+      path: chati.dev/schemas/memory.schema.json
+      type: schema
+      purpose: "JSON schema for memory entry frontmatter"
+      keywords: [memory, entry, validation, frontmatter]
+      dependencies: []
+      adaptability: 0.2
+
+    task:
+      path: chati.dev/schemas/task.schema.json
+      type: schema
+      purpose: "JSON schema for task definitions with acceptance criteria"
+      keywords: [task, criteria, given-when-then, validation]
+      dependencies: []
+      adaptability: 0.2
+
+  governance:
+    constitution:
+      path: chati.dev/constitution.md
+      type: governance
+      purpose: "15 Articles + Preamble governing all agent behavior"
+      keywords: [constitution, governance, rules, articles, enforcement]
+      dependencies: []
+      adaptability: 0.1
+
+  intelligence:
+    context-engine:
+      path: chati.dev/intelligence/context-engine.md
+      type: intelligence
+      purpose: "Bracket-aware context management — 4 brackets, 5 injection layers, recovery"
+      keywords: [context, brackets, injection, layers, recovery, compaction]
+      dependencies: [memory-layer, constitution]
+      adaptability: 0.3
+
+    memory-layer:
+      path: chati.dev/intelligence/memory-layer.md
+      type: intelligence
+      purpose: "Persistent knowledge across sessions — capture, storage, retrieval, scoring"
+      keywords: [memory, persistence, knowledge, sectors, attention, scoring]
+      dependencies: [context-engine]
+      adaptability: 0.3
+
+    decision-engine:
+      path: chati.dev/intelligence/decision-engine.md
+      type: intelligence
+      purpose: "Entity tracking and reuse optimization — REUSE/ADAPT/CREATE decisions"
+      keywords: [decision, reuse, adapt, create, similarity, registry]
+      dependencies: [entity-registry]
+      adaptability: 0.3
+
+    confidence:
+      path: chati.dev/intelligence/confidence.yaml
+      type: intelligence
+      purpose: "Confidence thresholds and scoring rules for agent decisions"
+      keywords: [confidence, thresholds, scoring, decisions]
+      dependencies: []
+      adaptability: 0.5
+
+    patterns:
+      path: chati.dev/intelligence/patterns.yaml
+      type: intelligence
+      purpose: "Validated development patterns and best practices"
+      keywords: [patterns, best-practices, validated, development]
+      dependencies: []
+      adaptability: 0.7
+
+    gotchas:
+      path: chati.dev/intelligence/gotchas.yaml
+      type: intelligence
+      purpose: "Known pitfalls and gotchas to avoid during development"
+      keywords: [gotchas, pitfalls, warnings, avoid]
+      dependencies: []
+      adaptability: 0.7
+
+  quality-gates:
+    planning-gate:
+      path: chati.dev/quality-gates/planning-gate.md
+      type: governance
+      purpose: "Quality gate criteria for QA-Planning validation"
+      keywords: [quality, gate, planning, traceability, validation]
+      dependencies: [qa-planning]
+      adaptability: 0.3
+
+    implementation-gate:
+      path: chati.dev/quality-gates/implementation-gate.md
+      type: governance
+      purpose: "Quality gate criteria for QA-Implementation validation"
+      keywords: [quality, gate, implementation, tests, sast]
+      dependencies: [qa-implementation]
+      adaptability: 0.3
+
+  frameworks:
+    quality-dimensions:
+      path: chati.dev/frameworks/quality-dimensions.yaml
+      type: framework
+      purpose: "Multi-dimensional quality assessment framework"
+      keywords: [quality, dimensions, assessment, measurement]
+      dependencies: []
+      adaptability: 0.4
+
+    decision-heuristics:
+      path: chati.dev/frameworks/decision-heuristics.yaml
+      type: framework
+      purpose: "Heuristic rules for agent decision-making"
+      keywords: [heuristics, decisions, rules, agents]
+      dependencies: []
+      adaptability: 0.5
+
+  patterns:
+    elicitation:
+      path: chati.dev/patterns/elicitation.md
+      type: framework
+      purpose: "Elicitation patterns for requirements gathering"
+      keywords: [elicitation, requirements, gathering, patterns, interview]
+      dependencies: [brief]
+      adaptability: 0.6
+
+  i18n:
+    en:
+      path: chati.dev/i18n/en.yaml
+      type: framework
+      purpose: "English language strings for installer and CLI"
+      keywords: [i18n, english, translation, strings]
+      dependencies: []
+      adaptability: 0.8
+
+    pt:
+      path: chati.dev/i18n/pt.yaml
+      type: framework
+      purpose: "Portuguese language strings for installer and CLI"
+      keywords: [i18n, portuguese, translation, strings]
+      dependencies: []
+      adaptability: 0.8
+
+    es:
+      path: chati.dev/i18n/es.yaml
+      type: framework
+      purpose: "Spanish language strings for installer and CLI"
+      keywords: [i18n, spanish, translation, strings]
+      dependencies: []
+      adaptability: 0.8
+
+    fr:
+      path: chati.dev/i18n/fr.yaml
+      type: framework
+      purpose: "French language strings for installer and CLI"
+      keywords: [i18n, french, translation, strings]
+      dependencies: []
+      adaptability: 0.8
+
+  migrations:
+    v1.0-to-v1.1:
+      path: chati.dev/migrations/v1.0-to-v1.1.yaml
+      type: framework
+      purpose: "Migration script from v1.0 to v1.1"
+      keywords: [migration, upgrade, v1.0, v1.1]
+      dependencies: [config]
+      adaptability: 0.3
+
+  data:
+    entity-registry:
+      path: chati.dev/data/entity-registry.yaml
+      type: framework
+      purpose: "Central catalog of all system artifacts (this file)"
+      keywords: [registry, catalog, entities, artifacts]
+      dependencies: []
+      adaptability: 0.4
+
+  config:
+    config:
+      path: chati.dev/config.yaml
+      type: framework
+      purpose: "System configuration — version, installation metadata"
+      keywords: [config, version, installation, settings]
+      dependencies: [config-schema]
+      adaptability: 0.3

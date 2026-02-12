@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20, 22]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        working-directory: packages/chati-dev
+        run: npm install
+
+      - name: Lint
+        working-directory: packages/chati-dev
+        run: npm run lint
+
+      - name: Test
+        working-directory: packages/chati-dev
+        run: npm test
+
+      - name: Bundle
+        working-directory: packages/chati-dev
+        run: npm run bundle
+
+  version-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check version consistency
+        working-directory: packages/chati-dev
+        run: |
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          LATEST_TAG=$(git tag -l 'v*' --sort=-v:refname | head -1)
+          if [ -n "$LATEST_TAG" ]; then
+            TAG_VERSION="${LATEST_TAG#v}"
+            if [ "$PKG_VERSION" = "$TAG_VERSION" ]; then
+              echo "::warning::package.json version ($PKG_VERSION) matches latest tag ($LATEST_TAG). Bump version before publishing."
+            fi
+          fi
+          echo "Current package version: $PKG_VERSION"
+          echo "Latest git tag: ${LATEST_TAG:-none}"

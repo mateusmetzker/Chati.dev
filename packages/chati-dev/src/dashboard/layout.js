@@ -136,6 +136,27 @@ export function buildValidateSection(data) {
 }
 
 /**
+ * Build INTELLIGENCE section
+ */
+export function buildIntelligenceSection(data) {
+  const mem = data.memoryStats;
+  const ctx = data.contextStatus;
+  const reg = data.registryStats;
+
+  const memText = mem ? `${mem.total} total (H:${mem.byTier.hot} W:${mem.byTier.warm} C:${mem.byTier.cold})` : gray('N/A');
+  const ctxText = ctx ? `${ctx.bracket} [${ctx.activeLayers.join(',')}]` : gray('N/A');
+  const regText = reg && reg.exists ? `${reg.totalEntities} entities (${reg.countMatch ? green('match') : yellow('mismatch')})` : gray('N/A');
+
+  return [
+    brand('│') + `  ${brand('── INTELLIGENCE')} ${'─'.repeat(41)}` + brand('│'),
+    brand('│') + `  │ ${dim('Memory:')}   ${memText}` + ' '.repeat(Math.max(1, 35 - String(memText).length)) + brand('│'),
+    brand('│') + `  │ ${dim('Context:')}  ${ctxText}` + ' '.repeat(Math.max(1, 35 - String(ctxText).length)) + brand('│'),
+    brand('│') + `  │ ${dim('Registry:')} ${regText}` + ' '.repeat(Math.max(1, 35 - String(regText).length)) + brand('│'),
+    brand('│') + `  ${'─'.repeat(57)}` + brand('│'),
+  ];
+}
+
+/**
  * Build footer with recent activity, blockers, gotchas
  */
 export function buildFooter(data) {

@@ -1,12 +1,24 @@
 #!/usr/bin/env node
 
-import { resolve, basename } from 'path';
+import { resolve } from 'path';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(join(__dirname, '..', 'package.json'), 'utf-8'));
+
+import { logBanner } from '../src/utils/logger.js';
+
+function showBanner() {
+  let logoText;
+  try {
+    logoText = readFileSync(join(__dirname, '..', 'assets', 'logo.txt'), 'utf-8');
+  } catch {
+    logoText = 'chati.dev';
+  }
+  logBanner(logoText, pkg.version);
+}
 
 const args = process.argv.slice(2);
 const command = args[0] || 'init';
@@ -26,9 +38,9 @@ async function main() {
       const { renderDashboard, renderDashboardWatch } = await import('../src/dashboard/renderer.js');
 
       if (watchFlag) {
-        renderDashboardWatch(targetDir);
+        await renderDashboardWatch(targetDir);
       } else {
-        renderDashboard(targetDir);
+        await renderDashboard(targetDir);
       }
       break;
     }
@@ -110,6 +122,131 @@ async function main() {
       break;
     }
 
+    case 'memory': {
+      const { listMemories, searchMemories, cleanMemories, getMemoryStats } = await import('../src/intelligence/memory-manager.js');
+      const memSubCmd = args[1] || 'stats';
+
+      if (memSubCmd === 'list') {
+        const agentIdx = args.indexOf('--agent');
+        const sectorIdx = args.indexOf('--sector');
+        const tierIdx = args.indexOf('--tier');
+        const opts = {};
+        if (agentIdx !== -1) opts.agent = args[agentIdx + 1];
+        if (sectorIdx !== -1) opts.sector = args[sectorIdx + 1];
+        if (tierIdx !== -1) opts.tier = args[tierIdx + 1];
+
+        const memories = listMemories(targetDir, opts);
+        if (memories.length === 0) {
+          console.log('No memories found.');
+        } else {
+          console.log(`Found ${memories.length} memories:\n`);
+          for (const m of memories) {
+            console.log(`  ${m.id || m.path}  [${m.tier || '?'}]  ${m.sector || '?'}  ${m.agent || 'shared'}`);
+          }
+        }
+      } else if (memSubCmd === 'search') {
+        const query = args[2];
+        if (!query) { console.error('Usage: npx chati-dev memory search <query>'); process.exit(1); }
+        const results = searchMemories(targetDir, query);
+        if (results.length === 0) {
+          console.log(`No memories matching "${query}".`);
+        } else {
+          console.log(`Found ${results.length} memories matching "${query}":\n`);
+          for (const r of results) {
+            console.log(`  ${r.id || r.path}  [${r.matchType}]  ${r.agent || 'shared'}`);
+          }
+        }
+      } else if (memSubCmd === 'clean') {
+        const dryRun = args.includes('--dry-run');
+        const result = cleanMemories(targetDir, { dryRun });
+        console.log(`Cleaned: ${result.cleaned}, Skipped: ${result.skipped}${result.dryRun ? ' (dry run)' : ''}`);
+      } else {
+        const stats = getMemoryStats(targetDir);
+        console.log('Memory Statistics');
+        console.log('='.repeat(30));
+        console.log(`  Total:      ${stats.total}`);
+        console.log(`  HOT:        ${stats.byTier.hot}`);
+        console.log(`  WARM:       ${stats.byTier.warm}`);
+        console.log(`  COLD:       ${stats.byTier.cold}`);
+        console.log(`  Disk Usage: ${(stats.diskUsage / 1024).toFixed(1)} KB`);
+        if (Object.keys(stats.byAgent).length > 0) {
+          console.log('\n  By Agent:');
+          for (const [agent, count] of Object.entries(stats.byAgent)) {
+            console.log(`    ${agent}: ${count}`);
+          }
+        }
+      }
+      break;
+    }
+
+    case 'context': {
+      const { getContextStatus } = await import('../src/intelligence/context-status.js');
+      const status = getContextStatus(targetDir);
+
+      console.log('Context Status (Advisory)');
+      console.log('='.repeat(30));
+      console.log(`  Bracket:     ${status.bracket}`);
+      console.log(`  Layers:      ${status.activeLayers.join(', ')}`);
+      console.log(`  Budget:      ${status.tokenBudget} tokens`);
+      console.log(`  Memory:      ${status.memoryLevel}`);
+      console.log(`  Agent:       ${status.currentAgent}`);
+      console.log(`  Pipeline:    ${status.pipelineState}`);
+      console.log(`  Completed:   ${status.completedAgents} agents`);
+      console.log(`\n  ${status.advisory}`);
+      break;
+    }
+
+    case 'registry': {
+      const { checkRegistry, getRegistryStats } = await import('../src/intelligence/registry-manager.js');
+      const regSubCmd = args[1] || 'stats';
+
+      if (regSubCmd === 'check') {
+        const result = checkRegistry(targetDir);
+        if (result.valid) {
+          console.log(`Registry: ${result.totalEntities}/${result.totalEntities} entities present`);
+          console.log('Status: VALID');
+        } else {
+          console.log(`Registry: ${result.found}/${result.totalEntities} entities present`);
+          console.log('Missing:');
+          for (const m of result.missing) {
+            console.log(`  - ${m.path}`);
+          }
+          console.log('Status: INVALID');
+        }
+      } else {
+        const stats = getRegistryStats(targetDir);
+        console.log('Registry Statistics');
+        console.log('='.repeat(30));
+        console.log(`  Version:     ${stats.version || 'N/A'}`);
+        console.log(`  Entities:    ${stats.totalEntities}`);
+        console.log(`  Declared:    ${stats.declaredCount}`);
+        console.log(`  Count Match: ${stats.countMatch ? 'Yes' : 'No'}`);
+        if (Object.keys(stats.byType).length > 0) {
+          console.log('\n  By Type:');
+          for (const [type, count] of Object.entries(stats.byType)) {
+            console.log(`    ${type}: ${count}`);
+          }
+        }
+      }
+      break;
+    }
+
+    case 'health': {
+      const { runHealthCheck } = await import('../src/intelligence/registry-manager.js');
+      const checks = runHealthCheck(targetDir);
+
+      console.log('chati.dev Health Check');
+      console.log('='.repeat(30));
+      console.log(`  Registry:     ${checks.registry.pass ? 'PASS' : 'FAIL'}  ${checks.registry.details}`);
+      console.log(`  Schemas:      ${checks.schemas.pass ? 'PASS' : 'FAIL'}  ${checks.schemas.details}`);
+      console.log(`  Constitution: ${checks.constitution.pass ? 'PASS' : 'FAIL'}  ${checks.constitution.details}`);
+      console.log(`  Agents:       ${checks.agents.pass ? 'PASS' : 'FAIL'}  ${checks.agents.details}`);
+      console.log(`  Entities:     ${checks.entities.pass ? 'PASS' : 'FAIL'}  ${checks.entities.details}`);
+      console.log();
+      console.log(`  Status: ${checks.overall} (${checks.passCount}/${checks.totalChecks})`);
+      break;
+    }
+
     case 'changelog': {
       console.log(`chati.dev v${pkg.version} Changelog`);
       console.log('═'.repeat(40));
@@ -141,11 +278,8 @@ async function main() {
     case '--help':
     case '-h':
     case 'help': {
-      console.log(`
-chati-dev v${pkg.version}
-AI-Powered Multi-Agent Development Framework
-
-Usage:
+      showBanner();
+      console.log(`Usage:
   npx chati-dev init [project-name]     Initialize new project
   npx chati-dev install                 Install into existing project
   npx chati-dev status                  Show dashboard
@@ -157,6 +291,12 @@ Usage:
   npx chati-dev --reconfigure           Reconfigure installation
   npx chati-dev --version               Show version
   npx chati-dev --help                  Show this help
+
+Intelligence:
+  npx chati-dev memory [stats|list|search|clean]  Memory management
+  npx chati-dev context                            Context bracket status
+  npx chati-dev registry [stats|check]             Entity registry
+  npx chati-dev health                             System health check
 `);
       break;
     }

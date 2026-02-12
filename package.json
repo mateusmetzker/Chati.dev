@@ -2,7 +2,7 @@
   "name": "chati-dev-monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "chati.dev — AI-Powered Multi-Agent Development Framework",
+  "description": "chati.dev — AI-Powered Multi-Agent Orchestration System",
   "author": "chati.dev",
   "license": "MIT",
   "repository": {

@@ -1,0 +1,145 @@
+# Migration: v1.1.0 -> v1.2.0
+# Intelligence Layer Runtime + Quality Infrastructure
+
+migration:
+  from: "1.1.0"
+  to: "1.2.0"
+  description: "Add Intelligence Layer (Context Engine, Memory Layer, Decision Engine), schemas, registry, and memories directory"
+  breaking: false
+
+steps:
+  # Create Memory Layer directory tree
+  - type: create_directory
+    path: ".chati/memories/shared/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/shared/daily"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/shared/session"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/greenfield-wu/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/greenfield-wu/daily"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/brownfield-wu/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/brownfield-wu/daily"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/brief/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/brief/daily"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/detail/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/detail/daily"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/architect/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/architect/daily"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/ux/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/ux/daily"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/phases/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/phases/daily"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/tasks/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/tasks/daily"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/qa-planning/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/qa-planning/daily"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/qa-implementation/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/qa-implementation/daily"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/dev/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/dev/daily"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/devops/durable"
+    idempotent: true
+
+  - type: create_directory
+    path: ".chati/memories/devops/daily"
+    idempotent: true
+
+  # Create data directory
+  - type: create_directory
+    path: "chati.dev/data"
+    idempotent: true
+
+  # Update config version
+  - type: update_yaml
+    path: "chati.dev/config.yaml"
+    operation: set
+    field: "version"
+    value: "1.2.0"
+
+rollback:
+  - type: update_yaml
+    path: "chati.dev/config.yaml"
+    operation: set
+    field: "version"
+    value: "1.1.0"
+
+notes: |
+  This migration:
+  - Creates .chati/memories/ directory tree (shared + 12 agent directories)
+  - Creates chati.dev/data/ directory for entity registry
+  - Updates config.yaml version to 1.2.0
+  - Intelligence spec files and schemas are copied by the installer/upgrade process
+  - Constitution Articles XII-XIV are in the updated constitution.md

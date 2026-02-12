@@ -69,6 +69,8 @@ export async function runWizard(targetDir, options = {}) {
     showStep(t('installer.installed_constitution'));
     showStep(t('installer.created_session'));
     showStep(t('installer.created_claude_md'));
+    showStep(t('installer.created_memories'));
+    showStep(t('installer.installed_intelligence'));
 
     if (selectedMCPs.length > 0) {
       showStep(`${t('installer.configured_mcps')} ${selectedMCPs.join(', ')}`);
@@ -86,6 +88,9 @@ export async function runWizard(targetDir, options = {}) {
     showValidation(t('installer.handoff_ok'));
     showValidation(t('installer.validation_ok'));
     showValidation(t('installer.constitution_ok'));
+    showValidation(t('installer.intelligence_valid'));
+    showValidation(t('installer.registry_valid'));
+    showValidation(t('installer.memories_valid'));
     showValidation(t('installer.session_ok'));
 
     console.log();

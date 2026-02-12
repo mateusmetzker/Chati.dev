@@ -28,6 +28,8 @@ export function createBackup(targetDir, currentVersion) {
     'i18n',
     'patterns',
     'migrations',
+    'intelligence',
+    'data',
   ];
 
   const filesToBackup = [

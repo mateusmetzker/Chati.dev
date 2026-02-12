@@ -35,7 +35,7 @@ const dirs = [
   'agents/clarity', 'agents/quality', 'agents/build', 'agents/deploy',
   'templates', 'workflows', 'quality-gates',
   'schemas', 'frameworks', 'intelligence', 'patterns',
-  'i18n', 'migrations',
+  'i18n', 'migrations', 'data',
 ];
 
 for (const dir of dirs) {
@@ -55,4 +55,13 @@ for (const file of rootFiles) {
 }
 
 console.log('Framework bundled to:', DEST);
+
+// Copy README from monorepo root so npm displays it
+const readmeSrc = join(MONOREPO_ROOT, 'README.md');
+const readmeDest = join(PACKAGE_ROOT, 'README.md');
+if (existsSync(readmeSrc)) {
+  cpSync(readmeSrc, readmeDest);
+  console.log('README.md copied to package.');
+}
+
 console.log('Done.');

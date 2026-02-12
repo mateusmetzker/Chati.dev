@@ -5,6 +5,7 @@ import {
   buildClaritySection,
   buildBuildSection,
   buildValidateSection,
+  buildIntelligenceSection,
   buildFooter,
 } from './layout.js';
 import { dim } from '../utils/colors.js';
@@ -12,8 +13,8 @@ import { dim } from '../utils/colors.js';
 /**
  * Render dashboard once (static mode)
  */
-export function renderDashboard(targetDir) {
-  const data = readDashboardData(targetDir);
+export async function renderDashboard(targetDir) {
+  const data = await readDashboardData(targetDir);
 
   if (!data.session) {
     console.log('No chati.dev session found. Run `npx chati-dev init` first.');
@@ -30,6 +31,8 @@ export function renderDashboard(targetDir) {
     '',
     ...buildValidateSection(data),
     '',
+    ...buildIntelligenceSection(data),
+    '',
     ...buildFooter(data),
   ];
 
@@ -43,16 +46,16 @@ export function renderDashboard(targetDir) {
 /**
  * Render dashboard in watch mode (auto-refresh)
  */
-export function renderDashboardWatch(targetDir, intervalMs = 5000) {
+export async function renderDashboardWatch(targetDir, intervalMs = 5000) {
   // Initial render
   console.clear();
-  renderDashboard(targetDir);
+  await renderDashboard(targetDir);
   console.log(dim(`  Auto-refreshing every ${intervalMs / 1000}s. Press Ctrl+C to exit.`));
 
   // Set up interval
-  const timer = setInterval(() => {
+  const timer = setInterval(async () => {
     console.clear();
-    renderDashboard(targetDir);
+    await renderDashboard(targetDir);
     console.log(dim(`  Auto-refreshing every ${intervalMs / 1000}s. Press Ctrl+C to exit.`));
     console.log(dim(`  Last update: ${new Date().toLocaleTimeString()}`));
   }, intervalMs);
@@ -70,8 +73,8 @@ export function renderDashboardWatch(targetDir, intervalMs = 5000) {
 /**
  * Render plain text fallback (for terminals without TUI support)
  */
-export function renderPlainDashboard(targetDir) {
-  const data = readDashboardData(targetDir);
+export async function renderPlainDashboard(targetDir) {
+  const data = await readDashboardData(targetDir);
 
   if (!data.session) {
     console.log('No chati.dev session found. Run `npx chati-dev init` first.');

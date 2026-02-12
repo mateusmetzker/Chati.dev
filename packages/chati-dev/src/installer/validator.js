@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 /**
@@ -13,6 +13,9 @@ export async function validateInstallation(targetDir) {
     schemas: { pass: false, details: [] },
     workflows: { pass: false, details: [] },
     templates: { pass: false, details: [] },
+    intelligence: { pass: false, details: [] },
+    registry: { pass: false, details: [] },
+    memories: { pass: false, details: [] },
     total: 0,
     passed: 0,
   };
@@ -56,7 +59,7 @@ export async function validateInstallation(targetDir) {
   if (existsSync(constitutionPath)) {
     const content = readFileSync(constitutionPath, 'utf-8');
     const articleCount = (content.match(/^## Article/gm) || []).length;
-    results.constitution.pass = articleCount >= 10;
+    results.constitution.pass = articleCount >= 15;
     results.constitution.details.push({ articleCount });
   }
   results.total += 1;
@@ -68,15 +71,18 @@ export async function validateInstallation(targetDir) {
   results.total += 1;
   if (results.session.pass) results.passed += 1;
 
-  // Check schemas
-  const schemaFiles = ['session.schema.json', 'config.schema.json', 'task.schema.json'];
+  // Check schemas (5 total: session, config, task, context, memory)
+  const schemaFiles = [
+    'session.schema.json', 'config.schema.json', 'task.schema.json',
+    'context.schema.json', 'memory.schema.json',
+  ];
   let schemaCount = 0;
   for (const file of schemaFiles) {
     if (existsSync(join(targetDir, 'chati.dev', 'schemas', file))) {
       schemaCount++;
     }
   }
-  results.schemas.pass = schemaCount === 3;
+  results.schemas.pass = schemaCount === 5;
   results.total += 1;
   if (results.schemas.pass) results.passed += 1;
 
@@ -109,6 +115,39 @@ export async function validateInstallation(targetDir) {
   results.templates.pass = templateCount === 5;
   results.total += 1;
   if (results.templates.pass) results.passed += 1;
+
+  // Check intelligence files (6: 3 specs + 3 yaml)
+  const intelligenceFiles = [
+    'intelligence/context-engine.md',
+    'intelligence/memory-layer.md',
+    'intelligence/decision-engine.md',
+    'intelligence/gotchas.yaml',
+    'intelligence/patterns.yaml',
+    'intelligence/confidence.yaml',
+  ];
+  let intelCount = 0;
+  for (const file of intelligenceFiles) {
+    if (existsSync(join(targetDir, 'chati.dev', file))) {
+      intelCount++;
+    }
+  }
+  results.intelligence.pass = intelCount === 6;
+  results.intelligence.details.push({ found: intelCount, expected: 6 });
+  results.total += 1;
+  if (results.intelligence.pass) results.passed += 1;
+
+  // Check entity registry
+  const registryPath = join(targetDir, 'chati.dev', 'data', 'entity-registry.yaml');
+  results.registry.pass = existsSync(registryPath);
+  results.total += 1;
+  if (results.registry.pass) results.passed += 1;
+
+  // Check .chati/memories/ directory tree
+  const memoriesPath = join(targetDir, '.chati', 'memories');
+  const memoriesShared = join(memoriesPath, 'shared', 'durable');
+  results.memories.pass = existsSync(memoriesPath) && existsSync(memoriesShared);
+  results.total += 1;
+  if (results.memories.pass) results.passed += 1;
 
   return results;
 }

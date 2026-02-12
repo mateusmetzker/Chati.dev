@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "chati.dev Context Block",
+  "description": "Schema for <chati-context> XML block structure injected into agent prompts",
+  "type": "object",
+  "required": ["bracket", "constitution", "mode"],
+  "properties": {
+    "bracket": {
+      "enum": ["FRESH", "MODERATE", "DEPLETED", "CRITICAL"],
+      "description": "Current context bracket based on remaining context window"
+    },
+    "constitution": {
+      "type": "string",
+      "description": "Summarized constitution content (always injected, L0 layer)"
+    },
+    "mode": {
+      "enum": ["clarity", "build", "deploy"],
+      "description": "Current execution mode from session state (L1 layer)"
+    },
+    "agent": {
+      "type": "object",
+      "description": "Active agent scope information (L2 layer, active when bracket >= DEPLETED)",
+      "required": ["name", "mission"],
+      "properties": {
+        "name": { "type": "string", "description": "Agent identifier" },
+        "mission": { "type": "string", "description": "One-line agent mission statement" },
+        "inputs": { "type": "string", "description": "Expected inputs for this agent" },
+        "outputs": { "type": "string", "description": "Expected outputs from this agent" },
+        "criteria": { "type": "string", "description": "Success criteria summary" }
+      }
+    },
+    "pipeline": {
+      "type": "string",
+      "description": "Pipeline state string showing agent progression (L3 layer, active when bracket >= MODERATE)"
+    },
+    "task": {
+      "type": "string",
+      "description": "Current task description (L4 layer, active when bracket >= MODERATE)"
+    },
+    "handoff": {
+      "type": "object",
+      "description": "Previous agent handoff summary (L4 layer, active when bracket >= MODERATE)",
+      "properties": {
+        "from": { "type": "string", "description": "Source agent name" },
+        "score": { "type": "number", "minimum": 0, "maximum": 100, "description": "Source agent final score" },
+        "summary": { "type": "string", "description": "Key context from previous agent" }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "description": "Memory injection based on bracket level",
+      "properties": {
+        "bracket": {
+          "enum": ["FRESH", "MODERATE", "DEPLETED", "CRITICAL"],
+          "description": "Memory retrieval bracket (mirrors context bracket)"
+        },
+        "level": {
+          "enum": ["none", "metadata", "chunks", "full"],
+          "description": "Memory retrieval level: none (FRESH), metadata (MODERATE), chunks (DEPLETED), full (CRITICAL)"
+        },
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "description": "Memory entry identifier" },
+              "title": { "type": "string", "description": "Memory title" },
+              "tier": { "enum": ["hot", "warm", "cold"], "description": "Memory attention tier" },
+              "summary": { "type": "string", "description": "Memory summary (L2 chunks level)" },
+              "content": { "type": "string", "description": "Full memory content (L3 full level)" }
+            }
+          }
+        }
+      }
+    },
+    "token_budget": {
+      "type": "object",
+      "description": "Token usage estimates",
+      "properties": {
+        "estimated_used": { "type": "integer", "minimum": 0, "description": "Estimated tokens used" },
+        "max_context": { "type": "integer", "minimum": 0, "description": "Maximum context window tokens" },
+        "remaining_percent": { "type": "number", "minimum": 0, "maximum": 100, "description": "Percentage of context remaining" },
+        "injection_budget": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Token budget for context injection (FRESH: 2500, MODERATE: 2000, DEPLETED: 1500, CRITICAL: 800)"
+        }
+      }
+    },
+    "active_layers": {
+      "type": "array",
+      "items": {
+        "enum": ["L0", "L1", "L2", "L3", "L4"]
+      },
+      "description": "Currently active injection layers based on bracket"
+    }
+  }
+}

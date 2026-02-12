@@ -1,11 +1,11 @@
-import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
+import { readFileSync, existsSync, readdirSync } from 'fs';
 import { join } from 'path';
 import yaml from 'js-yaml';
 
 /**
  * Read all dashboard data from project directory
  */
-export function readDashboardData(targetDir) {
+export async function readDashboardData(targetDir) {
   const data = {
     session: null,
     config: null,
@@ -15,6 +15,9 @@ export function readDashboardData(targetDir) {
     recentActivity: [],
     blockers: [],
     gotchas: [],
+    memoryStats: null,
+    contextStatus: null,
+    registryStats: null,
   };
 
   // Read session.yaml
@@ -93,6 +96,28 @@ export function readDashboardData(targetDir) {
       if (!b.completedAt) return -1;
       return new Date(b.completedAt) - new Date(a.completedAt);
     });
+  }
+
+  // Intelligence Layer data (graceful degradation)
+  try {
+    const { getMemoryStats } = await import('../intelligence/memory-manager.js');
+    data.memoryStats = getMemoryStats(targetDir);
+  } catch {
+    // Intelligence module not available
+  }
+
+  try {
+    const { getContextStatus } = await import('../intelligence/context-status.js');
+    data.contextStatus = getContextStatus(targetDir);
+  } catch {
+    // Intelligence module not available
+  }
+
+  try {
+    const { getRegistryStats } = await import('../intelligence/registry-manager.js');
+    data.registryStats = getRegistryStats(targetDir);
+  } catch {
+    // Intelligence module not available
   }
 
   return data;
