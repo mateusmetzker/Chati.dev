@@ -1,0 +1,47 @@
+# Greenfield Work Unit Agent Domain — Authority boundaries and behavioral rules for PRISM L2
+mission: "Analyze project context for greenfield (new) projects: detect tech stack, scaffolding, conventions"
+
+authority:
+  exclusive:
+    - Greenfield project analysis
+    - Scaffolding detection and recommendation
+    - New project tech stack detection
+    - Convention and standard identification for new projects
+  allowed:
+    - Read package.json and configuration files
+    - Analyze project structure
+    - Detect IDE and tooling setup
+    - Recommend scaffolding approaches
+    - Report on project initialization state
+  blocked:
+    - Code modification or implementation
+    - Architecture decisions
+    - Database schema design
+    - API design
+    - Brownfield/existing codebase analysis
+    - Deployment or DevOps tasks
+  redirectMessage: "This appears to be an existing project with code. Redirecting to brownfield-wu for deep discovery analysis."
+
+outputs:
+  - wu-report.yaml
+
+rules:
+  - id: gf-01
+    text: "MUST redirect to brownfield-wu if any source code files are detected (src/, lib/, app/ directories with .js/.ts/.py files)"
+    priority: critical
+
+  - id: gf-02
+    text: "MUST analyze package.json, requirements.txt, or equivalent dependency files if present"
+    priority: high
+
+  - id: gf-03
+    text: "MUST detect IDE configuration (Claude Code, VS Code, Cursor, etc.) from workspace files"
+    priority: high
+
+  - id: gf-04
+    text: "MUST NOT make architecture decisions; only detect and recommend based on project signals"
+    priority: critical
+
+  - id: gf-05
+    text: "MUST include scaffolding recommendations in wu-report.yaml based on detected tech stack"
+    priority: normal

@@ -3,7 +3,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { IDE_CONFIGS } from '../config/ide-configs.js';
 import { generateClaudeMCPConfig } from '../config/mcp-configs.js';
-import { generateSessionYaml, generateConfigYaml, generateClaudeMd } from './templates.js';
+import { generateSessionYaml, generateConfigYaml, generateClaudeMd, generateClaudeLocalMd } from './templates.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -14,7 +14,7 @@ const MONOREPO_SOURCE = join(__dirname, '..', '..', '..', '..', 'chati.dev');
 const FRAMEWORK_SOURCE = existsSync(BUNDLED_SOURCE) ? BUNDLED_SOURCE : MONOREPO_SOURCE;
 
 /**
- * Install chati.dev framework into target directory
+ * Install Chati.dev framework into target directory
  */
 export async function installFramework(config) {
   const { targetDir, projectType, language, selectedIDEs, selectedMCPs, projectName, version } = config;
@@ -37,7 +37,8 @@ export async function installFramework(config) {
     'agents/clarity', 'agents/quality', 'agents/build', 'agents/deploy',
     'templates', 'workflows', 'quality-gates',
     'schemas', 'frameworks', 'intelligence', 'patterns',
-    'i18n', 'migrations', 'data',
+    'hooks', 'domains', 'domains/agents', 'domains/workflows',
+    'i18n', 'migrations', 'data', 'context',
     'artifacts/0-WU', 'artifacts/1-Brief', 'artifacts/2-PRD',
     'artifacts/3-Architecture', 'artifacts/4-UX', 'artifacts/5-Phases',
     'artifacts/6-Tasks', 'artifacts/7-QA-Planning', 'artifacts/8-Validation',
@@ -84,16 +85,34 @@ export async function installFramework(config) {
     await configureIDE(targetDir, ideKey, selectedMCPs);
   }
 
-  // 4. Create/update CLAUDE.md at root
+  // 4. Copy context files to .claude/rules/chati/ (auto-loaded by Claude Code)
+  const rulesDir = join(targetDir, '.claude', 'rules', 'chati');
+  createDir(rulesDir);
+  const contextFiles = ['root.md', 'governance.md', 'protocols.md', 'quality.md'];
+  for (const file of contextFiles) {
+    const src = join(FRAMEWORK_SOURCE, 'context', file);
+    if (existsSync(src)) {
+      copyFileSync(src, join(rulesDir, file));
+    }
+  }
+
+  // 5. Create CLAUDE.md (minimal — framework rules auto-loaded from .claude/rules/chati/)
   writeFileSync(
     join(targetDir, 'CLAUDE.md'),
     generateClaudeMd({ projectName, projectType, language }),
     'utf-8'
   );
+
+  // 6. Create CLAUDE.local.md (runtime state — session lock, current agent)
+  writeFileSync(
+    join(targetDir, 'CLAUDE.local.md'),
+    generateClaudeLocalMd(),
+    'utf-8'
+  );
 }
 
 /**
- * Copy framework files from the chati.dev source directory
+ * Copy framework files from the Chati.dev source directory
  */
 function copyFrameworkFiles(destDir) {
   if (!existsSync(FRAMEWORK_SOURCE)) return;
@@ -149,6 +168,34 @@ function copyFrameworkFiles(destDir) {
     'intelligence/decision-engine.md',
     // Patterns
     'patterns/elicitation.md',
+    // Hooks
+    'hooks/prism-engine.js',
+    'hooks/mode-governance.js',
+    'hooks/constitution-guard.js',
+    'hooks/session-digest.js',
+    'hooks/model-governance.js',
+    'hooks/settings.json',
+    // Domains (PRISM Context Engine)
+    'domains/constitution.yaml',
+    'domains/global.yaml',
+    'domains/agents/orchestrator.yaml',
+    'domains/agents/greenfield-wu.yaml',
+    'domains/agents/brownfield-wu.yaml',
+    'domains/agents/brief.yaml',
+    'domains/agents/detail.yaml',
+    'domains/agents/architect.yaml',
+    'domains/agents/ux.yaml',
+    'domains/agents/phases.yaml',
+    'domains/agents/tasks.yaml',
+    'domains/agents/qa-planning.yaml',
+    'domains/agents/qa-implementation.yaml',
+    'domains/agents/dev.yaml',
+    'domains/agents/devops.yaml',
+    'domains/workflows/greenfield-fullstack.yaml',
+    'domains/workflows/brownfield-fullstack.yaml',
+    'domains/workflows/brownfield-discovery.yaml',
+    'domains/workflows/brownfield-service.yaml',
+    'domains/workflows/brownfield-ui.yaml',
     // i18n
     'i18n/en.yaml',
     'i18n/pt.yaml',
@@ -158,6 +205,11 @@ function copyFrameworkFiles(destDir) {
     'migrations/v1.0-to-v1.1.yaml',
     // Data
     'data/entity-registry.yaml',
+    // Context (@ import chain for CLAUDE.md)
+    'context/root.md',
+    'context/governance.md',
+    'context/protocols.md',
+    'context/quality.md',
   ];
 
   for (const file of filesToCopy) {
@@ -183,18 +235,37 @@ async function configureIDE(targetDir, ideKey, selectedMCPs) {
 
   if (ideKey === 'claude-code') {
     // Thin router
-    const routerContent = `---
-# chati.dev Thin Router
-# This file delegates to the full orchestrator at chati.dev/orchestrator/chati.md
-# DO NOT add logic here -- pure delegation only
+    const routerContent = `# /chati — Thin Router
+
+## CRITICAL — Language Override
+
+Read \`.chati/session.yaml\` field \`language\` BEFORE anything else.
+ALL responses MUST be in this language. This overrides any global IDE language setting.
+
+| Value | Language |
+|-------|----------|
+| \`en\`  | English |
+| \`pt\`  | Portugues |
+| \`es\`  | Espanol |
+| \`fr\`  | Francais |
+
+If session.yaml does not exist or has no language field, default to English.
+
 ---
 
-Read and execute the orchestrator at \`chati.dev/orchestrator/chati.md\`.
+## Load
 
-Pass through all context: session (.chati/session.yaml), handoffs (chati.dev/artifacts/handoffs/),
-artifacts (chati.dev/artifacts/), constitution (chati.dev/constitution.md).
+Read and execute the full orchestrator at \`chati.dev/orchestrator/chati.md\`.
 
-This is a thin router. All logic lives in the orchestrator.
+Pass through all context: session state, handoffs, artifacts, and user input.
+
+**Context to pass:**
+- \`.chati/session.yaml\` (session state — includes language)
+- \`CLAUDE.local.md\` (runtime state — session lock, current agent)
+- \`chati.dev/artifacts/handoffs/\` (latest handoff)
+- \`chati.dev/config.yaml\` (version info)
+
+**User input:** $ARGUMENTS
 `;
     writeFileSync(join(targetDir, '.claude', 'commands', 'chati.md'), routerContent, 'utf-8');
 
@@ -209,8 +280,8 @@ This is a thin router. All logic lives in the orchestrator.
     }
   } else {
     // For other IDEs, create a rules file pointing to chati.dev/
-    const rulesContent = `# chati.dev System Rules
-# This file configures ${config.name} to work with chati.dev
+    const rulesContent = `# Chati.dev System Rules
+# This file configures ${config.name} to work with Chati.dev
 
 ## System Location
 All system content is in the \`chati.dev/\` directory.

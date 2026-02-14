@@ -1,0 +1,167 @@
+# Migration: v1.4.0 → v2.0.0
+# chati.dev Orion Release
+# Run: npx chati-dev upgrade
+
+from_version: "1.4.0"
+to_version: "2.0.0"
+created_at: "2026-02-13"
+description: "Major upgrade — adds runtime intelligence, quality gates, multi-terminal orchestration, and installer hardening"
+
+# Pre-conditions
+preconditions:
+  - check: version_gte
+    value: "1.4.0"
+    message: "Must be on v1.4.0+ to upgrade to v2.0.0"
+  - check: constitution_articles
+    value: 16
+    message: "Constitution must have 16 articles (v1.4.0)"
+
+# Backup these before proceeding
+backup:
+  directories:
+    - chati.dev/
+    - .chati/
+  files:
+    - CLAUDE.md
+
+# Operations (executed in order)
+operations:
+  # 1. Create new source directories
+  - type: create_directory
+    paths:
+      - .chati/memories/shared/gotchas
+      - .chati/memories/shared/session
+      - .chati/checkpoints
+      - .chati/decisions
+      - chati.dev/data
+      - chati.dev/artifacts/0-WU
+      - chati.dev/artifacts/1-Brief
+      - chati.dev/artifacts/2-PRD
+      - chati.dev/artifacts/3-Architecture
+      - chati.dev/artifacts/4-UX
+      - chati.dev/artifacts/5-Phases
+      - chati.dev/artifacts/6-Tasks
+      - chati.dev/artifacts/7-QA-Planning
+      - chati.dev/artifacts/8-QA-Impl
+      - chati.dev/artifacts/9-Deploy
+      - chati.dev/artifacts/handoffs
+
+  # 2. Create agent memory directories
+  - type: create_directory
+    paths:
+      - .chati/memories/greenfield-wu
+      - .chati/memories/brownfield-wu
+      - .chati/memories/brief
+      - .chati/memories/detail
+      - .chati/memories/architect
+      - .chati/memories/ux
+      - .chati/memories/phases
+      - .chati/memories/tasks
+      - .chati/memories/qa-planning
+      - .chati/memories/qa-implementation
+      - .chati/memories/dev
+      - .chati/memories/devops
+
+  # 3. Update constitution (add Article XVII)
+  - type: update_file
+    path: chati.dev/constitution.md
+    strategy: replace
+    description: "Add Article XVII (Execution Mode Governance), update footer to 17 articles"
+
+  # 4. Update config version
+  - type: update_yaml
+    path: chati.dev/config.yaml
+    changes:
+      version: "2.0.0"
+      updated_at: "auto"
+      installer_version: "2.0.0"
+
+  # 5. Update session schema (add new fields)
+  - type: update_file
+    path: chati.dev/schemas/session.schema.json
+    strategy: merge
+    description: "Add gate_evaluations[], mode_transitions[], execution_mode fields"
+
+  # 6. Copy new task definitions (72 tasks)
+  - type: copy_directory
+    source: framework/tasks
+    destination: chati.dev/tasks
+    strategy: replace
+    description: "Install 72 task definition files"
+
+  # 7. Update enriched agents (13 agents)
+  - type: copy_directory
+    source: framework/agents
+    destination: chati.dev/agents
+    strategy: replace
+    description: "Install enriched agent definitions (10 sections each)"
+
+  # 8. Copy orchestrator
+  - type: copy_directory
+    source: framework/orchestrator
+    destination: chati.dev/orchestrator
+    strategy: replace
+
+  # 9. Update entity registry
+  - type: copy_file
+    source: framework/data/entity-registry.yaml
+    destination: chati.dev/data/entity-registry.yaml
+    strategy: replace
+
+  # 10. Update quality gates content
+  - type: copy_directory
+    source: framework/quality-gates
+    destination: chati.dev/quality-gates
+    strategy: replace
+
+  # 11. Update domains
+  - type: copy_directory
+    source: framework/domains
+    destination: chati.dev/domains
+    strategy: replace
+
+  # 12. Update hooks
+  - type: copy_directory
+    source: framework/hooks
+    destination: chati.dev/hooks
+    strategy: replace
+
+  # 13. Update .gitignore
+  - type: append_file
+    path: .gitignore
+    content: |
+      # chati.dev v2.0 additions
+      .chati/memories/
+      .chati/checkpoints/
+      .chati/decisions/
+      .chati/codebase-map.json
+      .chati/plan.json
+      .chati/manifest.json
+    condition: not_contains
+    check_string: ".chati/memories/"
+
+# Post-migration validation
+validation:
+  - check: file_exists
+    path: chati.dev/constitution.md
+  - check: file_contains
+    path: chati.dev/constitution.md
+    content: "Article XVII"
+  - check: directory_exists
+    path: .chati/memories
+  - check: directory_exists
+    path: chati.dev/tasks
+  - check: file_count_gte
+    path: chati.dev/tasks
+    count: 70
+  - check: yaml_field
+    path: chati.dev/config.yaml
+    field: version
+    value: "2.0.0"
+
+# Rollback instructions
+rollback:
+  description: "Restore from .chati/backup-{timestamp}/ created during upgrade"
+  steps:
+    - "npx chati-dev upgrade --rollback"
+    - "Or manually: cp -r .chati/backup-{timestamp}/chati.dev/ chati.dev/"

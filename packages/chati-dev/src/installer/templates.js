@@ -64,7 +64,7 @@ export function generateConfigYaml(config) {
 }
 
 /**
- * Generate CLAUDE.md content
+ * Generate CLAUDE.md content (minimal — framework rules auto-loaded from .claude/rules/chati/)
  */
 export function generateClaudeMd(config) {
   const { projectName, projectType, language } = config;
@@ -73,32 +73,34 @@ export function generateClaudeMd(config) {
 
 ## Project Context
 - **Type**: ${projectType === 'greenfield' ? 'Greenfield (new project)' : 'Brownfield (existing project)'}
-- **State**: CLARITY (planning phase)
 - **Language**: ${language}
-- **Current Agent**: None (ready to start)
 
-## Quick Start
-Type \`/chati\` to activate the orchestrator. It will guide you through the entire process.
+## Chati.dev
+Framework rules loaded from \`.claude/rules/chati/\`. Runtime state in \`CLAUDE.local.md\`.
+Type \`/chati\` to start.
+`;
+}
+
+/**
+ * Generate CLAUDE.local.md content (runtime state — auto-gitignored, never committed)
+ */
+export function generateClaudeLocalMd() {
+  return `# Chati.dev Runtime State
 
 ## Session Lock
 **Status: INACTIVE** — Type \`/chati\` to activate.
 
-When active, ALL messages are routed through the chati.dev orchestrator. The user stays inside the system until they explicitly exit with \`/chati exit\`.
-
 <!-- SESSION-LOCK:INACTIVE -->
 
-## Key Files
-- **Session**: \`.chati/session.yaml\` (runtime state)
-- **Constitution**: \`chati.dev/constitution.md\` (governance)
-- **Orchestrator**: \`chati.dev/orchestrator/chati.md\` (entry point)
-
-## Pipeline
-CLARITY (planning) -> BUILD (implementation) -> VALIDATE -> DEPLOY
+## Current State
+- **Agent**: None (ready to start)
+- **Pipeline**: Pre-start
+- **Mode**: interactive
 
 ## Recent Decisions
 _No decisions yet. Start with /chati._
 
 ---
-_Auto-updated by chati.dev agents (Protocol 5.4)_
+_Auto-updated by Chati.dev orchestrator_
 `;
 }

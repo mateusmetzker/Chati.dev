@@ -1,0 +1,132 @@
+# Migration: v2.0.0 → v2.0.1
+# chati.dev Modular CLAUDE.md Pattern
+# Run: npx chati-dev upgrade
+
+from_version: "2.0.0"
+to_version: "2.0.1"
+created_at: "2026-02-13"
+description: "Modular CLAUDE.md — .claude/rules/chati/ auto-loading, CLAUDE.local.md for runtime state"
+
+# Pre-conditions
+preconditions:
+  - check: version_gte
+    value: "2.0.0"
+    message: "Must be on v2.0.0+ to upgrade to v2.0.1"
+  - check: constitution_articles
+    value: 17
+    message: "Constitution must have 17 articles (v2.0.0)"
+
+# Backup these before proceeding
+backup:
+  directories:
+    - chati.dev/
+    - .chati/
+  files:
+    - CLAUDE.md
+    - CLAUDE.local.md
+
+# Operations (executed in order)
+operations:
+  # 1. Create context directory
+  - type: create_directory
+    paths:
+      - chati.dev/context
+
+  # 2. Copy context source files
+  - type: copy_directory
+    source: framework/context
+    destination: chati.dev/context
+    strategy: replace
+    description: "Install context source files (root.md, governance.md, protocols.md, quality.md)"
+
+  # 2b. Deploy context files to .claude/rules/chati/ (auto-loaded by Claude Code)
+  - type: create_directory
+    paths:
+      - .claude/rules/chati
+
+  - type: copy_directory
+    source: framework/context
+    destination: .claude/rules/chati
+    strategy: replace
+    description: "Deploy context files for Claude Code auto-loading (no @ imports needed)"
+
+  # 3. Create CLAUDE.local.md (runtime state)
+  - type: create_file
+    path: CLAUDE.local.md
+    content: |
+      # chati.dev Runtime State
+
+      ## Session Lock
+      **Status: INACTIVE** — Type `/chati` to activate.
+
+      <!-- SESSION-LOCK:INACTIVE -->
+
+      ## Current State
+      - **Agent**: None (ready to start)
+      - **Pipeline**: Pre-start
+      - **Mode**: interactive
+
+      ## Recent Decisions
+      _No decisions yet. Start with /chati._
+
+      ---
+      _Auto-updated by chati.dev orchestrator_
+    condition: not_exists
+
+  # 4. Migrate CLAUDE.md to minimal version (no @ imports — rules auto-loaded)
+  - type: update_file
+    path: CLAUDE.md
+    strategy: replace
+    description: "Replace bloated CLAUDE.md with minimal version (framework rules auto-loaded from .claude/rules/chati/)"
+
+  # 5. Update orchestrator (session lock → CLAUDE.local.md)
+  - type: copy_file
+    source: framework/orchestrator/chati.md
+    destination: chati.dev/orchestrator/chati.md
+    strategy: replace
+    description: "Update orchestrator to reference CLAUDE.local.md instead of CLAUDE.md for session lock"
+
+  # 6. Update config version
+  - type: update_yaml
+    path: chati.dev/config.yaml
+    changes:
+      version: "2.0.1"
+      updated_at: "auto"
+      installer_version: "2.0.1"
+
+  # 7. Update .gitignore for CLAUDE.local.md
+  - type: append_file
+    path: .gitignore
+    content: |
+      # chati.dev v2.0.1 — runtime state (not committed)
+      CLAUDE.local.md
+    condition: not_contains
+    check_string: "CLAUDE.local.md"
+
+# Post-migration validation
+validation:
+  - check: file_exists
+    path: chati.dev/context/root.md
+  - check: file_exists
+    path: chati.dev/context/governance.md
+  - check: file_exists
+    path: chati.dev/context/protocols.md
+  - check: file_exists
+    path: chati.dev/context/quality.md
+  - check: file_exists
+    path: CLAUDE.local.md
+  - check: file_exists
+    path: .claude/rules/chati/root.md
+  - check: file_exists
+    path: .claude/rules/chati/governance.md
+  - check: yaml_field
+    path: chati.dev/config.yaml
+    field: version
+    value: "2.0.1"
+
+# Rollback instructions
+rollback:
+  description: "Restore from .chati/backup-{timestamp}/ created during upgrade"
+  steps:
+    - "npx chati-dev upgrade --rollback"
+    - "Or manually: cp -r .chati/backup-{timestamp}/CLAUDE.md CLAUDE.md"

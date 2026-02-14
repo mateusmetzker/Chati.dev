@@ -61,7 +61,7 @@ export async function checkForUpdate(targetDir, cliVersion) {
 
 /**
  * Get changelog between versions
- * In v1, returns placeholder. Future: read from CHANGELOG.md or API
+ * In v1, returns placeholder. Future: read from docs/CHANGELOG.md or API
  */
 function getChangelog(fromVersion, toVersion) {
   return [

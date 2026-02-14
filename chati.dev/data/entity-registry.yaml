@@ -1,4 +1,4 @@
-# chati.dev Entity Registry — Central Catalog of All System Artifacts
+# Chati.dev Entity Registry — Central Catalog of All System Artifacts
 # Used by the Decision Engine for REUSE/ADAPT/CREATE recommendations
 # and by the Health Check for system integrity validation.
 
@@ -241,7 +241,7 @@ entities:
     constitution:
       path: chati.dev/constitution.md
       type: governance
-      purpose: "16 Articles + Preamble governing all agent behavior"
+      purpose: "17 Articles + Preamble governing all agent behavior"
       keywords: [constitution, governance, rules, articles, enforcement]
       dependencies: []
       adaptability: 0.1

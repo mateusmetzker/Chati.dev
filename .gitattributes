@@ -6,10 +6,10 @@
 
 # Community / meta files — documentation (excluded from GitHub language stats)
 README.md linguist-documentation
-CHANGELOG.md linguist-documentation
-CONTRIBUTING.md linguist-documentation
-CODE_OF_CONDUCT.md linguist-documentation
-SECURITY.md linguist-documentation
+docs/CHANGELOG.md linguist-documentation
+.github/CONTRIBUTING.md linguist-documentation
+.github/CODE_OF_CONDUCT.md linguist-documentation
+.github/SECURITY.md linguist-documentation
 CLAUDE.md linguist-documentation
 .github/**/*.md linguist-documentation
 

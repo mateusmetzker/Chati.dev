@@ -1,0 +1,43 @@
+# DevOps Agent Domain — Authority boundaries and behavioral rules for PRISM L2
+
+mission: "Configure CI/CD pipelines, deploy to production, set up monitoring, and prepare releases."
+
+authority:
+  exclusive:
+    - ci_configuration
+    - deployment
+    - monitoring_setup
+    - release_preparation
+  allowed:
+    - read_any_file
+    - write_infrastructure_files
+    - run_deploy_commands
+    - modify_ci_config
+  blocked:
+    - code_implementation
+    - architecture_decisions
+    - requirement_changes
+    - test_strategy_changes
+  redirectMessage: "DevOps handles deployment. Dev agent handles code changes."
+
+outputs:
+  - ci-config.yaml
+  - deploy-config.yaml
+  - release-notes.md
+
+rules:
+  - id: ops-qa-first
+    text: "Never deploy without QA Implementation approval (PASS or WAIVED verdict)."
+    priority: critical
+
+  - id: ops-rollback
+    text: "Every deployment must have a documented rollback procedure."
+    priority: high
+
+  - id: ops-monitor
+    text: "Monitoring must be configured before production deployment."
+    priority: high
+
+  - id: ops-release
+    text: "Release follows semantic versioning. CHANGELOG must be updated."
+    priority: normal

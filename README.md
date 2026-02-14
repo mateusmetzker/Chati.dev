@@ -1,26 +1,26 @@
 <div align="center">
 <br>
-<img src="packages/chati-dev/assets/logo.svg" alt="chati.dev" width="380">
+<img src="packages/chati-dev/assets/logo.svg" alt="Chati.dev" width="380">
 <br><br>
 <strong>AI-Powered Multi-Agent Orchestration System</strong><br>
-<em>13 agents. 16 articles. 6 IDEs. 4 languages. Structured vibe coding.</em>
+<em>13 agents. 17 articles. 6 IDEs. 4 languages. 849 tests. Structured vibe coding.</em>
 </div>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/chati-dev"><img src="https://img.shields.io/npm/v/chati-dev?color=blue&label=npm" alt="npm"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
-  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg" alt="Node.js"></a>
+  <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg" alt="Node.js"></a>
   <a href="#architecture"><img src="https://img.shields.io/badge/agents-13-purple.svg" alt="Agents"></a>
   <a href="#supported-ides"><img src="https://img.shields.io/badge/IDEs-6-orange.svg" alt="IDEs"></a>
   <a href="#internationalization"><img src="https://img.shields.io/badge/i18n-EN%20%7C%20PT%20%7C%20ES%20%7C%20FR-informational.svg" alt="i18n"></a>
-  <a href="CONTRIBUTING.md"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg" alt="Contributions Welcome"></a>
+  <a href=".github/CONTRIBUTING.md"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg" alt="Contributions Welcome"></a>
 </p>
 
 ---
 
 A structured, agent-driven orchestration system that coordinates **13 specialized AI agents** across the full software development lifecycle — from requirements gathering to deployment. Every decision is traceable, every artifact is validated, every session persists.
 
-## Why chati.dev?
+## Why Chati.dev?
 
 ### The Problem
 
@@ -32,7 +32,7 @@ AI-assisted development today suffers from three critical issues:
 
 ### The Solution
 
-chati.dev introduces **Agent-Driven Development**: a pipeline of 13 specialized agents where each agent owns a specific phase, produces validated artifacts, and hands off context to the next agent. An Intelligence Layer ensures context is never lost, knowledge persists across sessions, and the user never accidentally leaves the system.
+Chati.dev introduces **Agent-Driven Development**: a pipeline of 13 specialized agents where each agent owns a specific phase, produces validated artifacts, and hands off context to the next agent. An Intelligence Layer ensures context is never lost, knowledge persists across sessions, and the user never accidentally leaves the system.
 
 ```
 CLARITY (planning)  →  Quality Gate  →  BUILD  →  Quality Gate  →  DEPLOY
@@ -44,11 +44,14 @@ CLARITY (planning)  →  Quality Gate  →  BUILD  →  Quality Gate  →  DEPLO
 | Innovation | Description |
 |------------|-------------|
 | **Structured Agent Pipeline** | 13 agents with defined missions, validated outputs, and handoff protocols |
-| **Self-Validating Agents** | Binary pass/fail criteria per agent. Quality gates at planning and implementation |
-| **Context Engine** | 4 context brackets (FRESH → CRITICAL) with 5 injection layers. Autonomous recovery |
-| **Memory Layer** | 4 cognitive sectors. Persistent knowledge across sessions with attention scoring |
-| **Framework Registry** | Entity catalog with decision engine (REUSE/ADAPT/CREATE) for brownfield analysis |
+| **Self-Validating Agents** | Binary pass/fail criteria per agent. 5 quality gates with circuit breaker |
+| **Context Engine PRISM** | 5-layer injection pipeline with bracket tracking (FRESH → CRITICAL). Autonomous recovery |
+| **Memory System RECALL** | 4 cognitive sectors. Persistent knowledge across sessions with attention scoring and natural decay |
+| **Decision Engine COMPASS** | Entity catalog with Jaccard similarity for REUSE/ADAPT/CREATE decisions. Self-healing registry |
 | **Session Lock** | Once activated, user stays in system until explicit exit. Zero accidental leakage |
+| **Hooks System** | 5 Claude Code hooks — constitution guard, mode governance, model governance, context injection, session digest |
+| **Execution Modes** | Autonomous and human-in-the-loop modes with safety net (5 triggers) and circuit breaker |
+| **Multi-Terminal** | Parallel agent execution with write-scope isolation (Detail + Architect + UX simultaneously) |
 | **IDE-Agnostic** | Works with 6 IDEs through a thin router pattern |
 
 ---
@@ -139,15 +142,15 @@ User Request
 └──────────────────────────────────────────────────┘
 ```
 
-### Intelligence Layer (V7.1)
+### Intelligence Layer
 
 The Intelligence Layer operates transparently behind the pipeline:
 
 | System | What it does |
 |--------|-------------|
-| **Context Engine** | Detects context depletion across 4 brackets. Reduces injection layers as context fills. Autonomous recovery via Smart Continuation or Session Spawn. |
-| **Memory Layer** | Captures decisions, patterns, and lessons learned. Persists across sessions. 4 cognitive sectors (Episodic, Semantic, Procedural, Reflective). Attention scoring with natural decay. |
-| **Framework Registry** | Catalogs all 48 system artifacts. Decision engine for brownfield analysis: REUSE existing artifacts, ADAPT with modifications, or CREATE new. |
+| **Context Engine PRISM** | 5-layer injection pipeline (Constitution → Global → Agent → Workflow → Task). 4 brackets (FRESH/MODERATE/DEPLETED/CRITICAL). Domain loading with graceful degradation. |
+| **Memory System RECALL** | Gotchas auto-capture with 3x/24h promotion. Per-agent memory CRUD. Session digests. Unified search across 4 cognitive sectors (Episodic, Semantic, Procedural, Reflective). |
+| **Decision Engine COMPASS** | Jaccard similarity for REUSE/ADAPT/CREATE decisions. BFS dependency analysis. Entity registry auto-update. 6 self-healing rules. |
 | **Session Lock** | Locks the session on `/chati` activation. All messages routed through orchestrator. Exit only via `/chati exit`. Prevents accidental context leakage. |
 
 ### Universal Protocols
@@ -167,7 +170,7 @@ Every agent follows 8 universal protocols:
 
 ### Constitution
 
-The system is governed by a **16-article Constitution** that enforces agent behavior, quality standards, security, and system integrity. Key articles:
+The system is governed by a **17-article Constitution** that enforces agent behavior, quality standards, security, and system integrity. Key articles:
 
 | Article | Governance |
 |---------|-----------|
@@ -178,6 +181,7 @@ The system is governed by a **16-article Constitution** that enforces agent beha
 | XII-XIV | Context bracket governance, memory governance, framework registry |
 | XV | Session lock governance — mandatory lock, explicit exit only |
 | XVI | Model governance — opus/sonnet/haiku per agent, no downgrade rule |
+| XVII | Execution mode governance — autonomous vs human-in-the-loop, safety net triggers |
 
 ---
 
@@ -233,13 +237,21 @@ The system is governed by a **16-article Constitution** that enforces agent beha
 ```
 your-project/
 ├── .chati/
-│   ├── session.yaml              # Session state (auto-managed)
-│   ├── memories/                 # Memory Layer storage (gitignored)
-│   └── continuation/             # Context recovery files
+│   ├── session.yaml              # Session state (auto-managed, gitignored)
+│   └── memories/                 # Memory Layer storage (gitignored)
 ├── .claude/
-│   └── commands/
-│       └── chati.md              # Thin router → orchestrator
-├── CLAUDE.md                     # IDE entry point (auto-updated)
+│   ├── commands/
+│   │   └── chati.md              # Thin router → orchestrator
+│   └── rules/
+│       └── chati/                # Framework context (auto-loaded by Claude Code)
+│           ├── root.md           # System overview + key references
+│           ├── governance.md     # Constitution key rules
+│           ├── protocols.md      # 8 universal protocols
+│           └── quality.md        # Quality standards
+├── CLAUDE.md                     # Minimal project context (auto-generated)
+├── CLAUDE.local.md               # Runtime state — session lock, current agent (gitignored)
+├── docs/
+│   └── CHANGELOG.md              # Version history
 ├── chati.dev/
 │   ├── orchestrator/             # Main orchestrator
 │   ├── agents/                   # 13 agent definitions
@@ -247,17 +259,21 @@ your-project/
 │   │   ├── quality/              # 2 quality gate agents
 │   │   ├── build/                # Dev agent
 │   │   └── deploy/               # DevOps agent
+│   ├── tasks/                    # 72 task definitions (YAML frontmatter)
 │   ├── workflows/                # 5 workflow blueprints
 │   ├── templates/                # 5 artifact templates
-│   ├── schemas/                  # JSON schemas for validation
+│   ├── schemas/                  # 5 JSON schemas for validation
 │   ├── intelligence/             # Context Engine, Memory Layer, Decision Engine
+│   ├── domains/                  # Domain loading configs (per-agent, per-workflow)
+│   ├── hooks/                    # 5 Claude Code hooks (enforcement)
+│   ├── context/                  # Context source files (deployed to .claude/rules/)
 │   ├── frameworks/               # Decision heuristics, quality dims
 │   ├── quality-gates/            # Planning & implementation gates
 │   ├── patterns/                 # Elicitation patterns
-│   ├── data/                     # Entity registry
+│   ├── data/                     # Entity registry (48 artifacts)
 │   ├── i18n/                     # EN, PT, ES, FR translations
 │   ├── migrations/               # Version migration scripts
-│   ├── constitution.md           # 16 Articles + Preamble
+│   ├── constitution.md           # 17 Articles + Preamble
 │   └── config.yaml               # System configuration
 ├── chati.dev/artifacts/          # Generated during pipeline
 │   ├── 0-WU/
@@ -305,7 +321,7 @@ Upgrades include automatic backup, migrations, validation, and config merging. R
 
 ## Prerequisites
 
-- **Node.js** >= 18.0.0
+- **Node.js** >= 20.0.0
 - **npm** >= 9.0.0
 - A supported IDE with AI assistant capabilities
 
@@ -313,11 +329,11 @@ Upgrades include automatic backup, migrations, validation, and config merging. R
 
 ## Contributing
 
-We welcome contributions from agents, templates, workflows, intelligence data, translations, and CLI improvements. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions from agents, templates, workflows, intelligence data, translations, and CLI improvements. Please see [CONTRIBUTING.md](.github/CONTRIBUTING.md) for guidelines.
 
 ## Security
 
-For security concerns, please see our [Security Policy](SECURITY.md).
+For security concerns, please see our [Security Policy](.github/SECURITY.md).
 
 ## License
 
@@ -327,5 +343,5 @@ This project is licensed under the MIT License — see [LICENSE](LICENSE) for de
 
 <p align="center">
   <sub>Built with structure, validated by agents, governed by constitution.</sub><br>
-  <sub>chati.dev &copy; 2026</sub>
+  <sub>Chati.dev &copy; 2026</sub>
 </p>

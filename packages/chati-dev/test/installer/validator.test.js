@@ -38,11 +38,11 @@ describe('validateInstallation', () => {
     writeFileSync(join(chatiDir, 'agents', 'build', 'dev.md'), agentContent);
     writeFileSync(join(chatiDir, 'agents', 'deploy', 'devops.md'), agentContent);
 
-    // Constitution with 16 articles
+    // Constitution with 17 articles
     let constitution = '# Constitution\n## Preamble\n';
-    for (let i = 1; i <= 16; i++) {
-      const num = i === 16 ? 'XVI' : i === 15 ? 'XV' : i <= 11 ? ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI'][i-1] : ['XII','XIII','XIV'][i-12];
-      constitution += `## Article ${num}: Title\nContent.\n\n`;
+    const numerals = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII'];
+    for (let i = 1; i <= 17; i++) {
+      constitution += `## Article ${numerals[i-1]}: Title\nContent.\n\n`;
     }
     writeFileSync(join(chatiDir, 'constitution.md'), constitution);
 
@@ -74,6 +74,12 @@ describe('validateInstallation', () => {
 
     // Entity registry
     writeFileSync(join(chatiDir, 'data', 'entity-registry.yaml'), 'metadata:\n  version: "1.0.0"');
+
+    // Context files (@ import chain for CLAUDE.md)
+    mkdirSync(join(chatiDir, 'context'), { recursive: true });
+    for (const f of ['root.md', 'governance.md', 'protocols.md', 'quality.md']) {
+      writeFileSync(join(chatiDir, 'context', f), `# ${f}\nContent.`);
+    }
   });
 
   after(() => {
@@ -91,6 +97,7 @@ describe('validateInstallation', () => {
     assert.equal(results.intelligence.pass, true, 'intelligence should pass');
     assert.equal(results.registry.pass, true, 'registry should pass');
     assert.equal(results.memories.pass, true, 'memories should pass');
+    assert.equal(results.context.pass, true, 'context should pass');
     assert.equal(results.passed, results.total, 'all checks should pass');
   });
 
@@ -107,7 +114,7 @@ describe('validateInstallation', () => {
 
   it('returns correct total count', async () => {
     const results = await validateInstallation(tempDir);
-    assert.equal(results.total, 9, 'should check 9 categories');
+    assert.equal(results.total, 10, 'should check 10 categories');
   });
 
   it('fails intelligence when spec files are missing', async () => {
@@ -138,7 +145,21 @@ describe('validateInstallation', () => {
     rmSync(partialDir, { recursive: true, force: true });
   });
 
-  it('requires 16 constitution articles', async () => {
+  it('fails context when context files are missing', async () => {
+    const partialDir = mkdtempSync(join(tmpdir(), 'chati-context-'));
+    mkdirSync(join(partialDir, 'chati.dev', 'context'), { recursive: true });
+    // Only create 2 of 4 context files
+    writeFileSync(join(partialDir, 'chati.dev', 'context', 'root.md'), '# Root');
+    writeFileSync(join(partialDir, 'chati.dev', 'context', 'governance.md'), '# Gov');
+
+    const results = await validateInstallation(partialDir);
+    assert.equal(results.context.pass, false);
+    assert.equal(results.context.details[0].found, 2);
+
+    rmSync(partialDir, { recursive: true, force: true });
+  });
+
+  it('requires 17 constitution articles', async () => {
     const partialDir = mkdtempSync(join(tmpdir(), 'chati-const-'));
     mkdirSync(join(partialDir, 'chati.dev'), { recursive: true });
     // Only 10 articles (old threshold)

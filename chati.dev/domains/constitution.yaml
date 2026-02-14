@@ -1,0 +1,77 @@
+# Constitution Domain — Extracted governance rules for PRISM L0
+# Source: chati.dev/constitution.md (17 Articles + Preamble)
+
+summary: >
+  Constitution governance: self-validation required (loop until quality >= 95%),
+  guided options (1,2,3 format), persistent session state, two-layer handoff,
+  language protocol (interaction=user lang, artifacts=English),
+  deviation protocol, mode governance (clarity/build/deploy),
+  context brackets, memory governance, registry governance,
+  session lock, model governance.
+
+articleCount: 16
+
+rules:
+  - id: art-i
+    text: "Agents must follow their assigned role, authority boundaries, and domain scope."
+    priority: critical
+
+  - id: art-ii
+    text: "Quality >= 95% self-validation required. Loop until threshold met."
+    priority: critical
+
+  - id: art-iii
+    text: "Memory and context must be managed through designated systems (PRISM, RECALL)."
+    priority: high
+
+  - id: art-iv
+    text: "No destructive operations without user confirmation. No secrets in system files. SAST mandatory."
+    priority: critical
+
+  - id: art-v
+    text: "Communication follows structured protocol: guided options (1,2,3), clear formatting."
+    priority: normal
+
+  - id: art-vi
+    text: "Design system tokens must be respected when generating UI code."
+    priority: normal
+
+  - id: art-vii
+    text: "All documentation and artifacts must be in English."
+    priority: high
+
+  - id: art-viii
+    text: "Two-layer handoff documents required between agents (executive summary + detailed)."
+    priority: high
+
+  - id: art-ix
+    text: "Agent-driven interaction model with power user escape hatch."
+    priority: normal
+
+  - id: art-x
+    text: "Dynamic self-validation with binary pass/fail criteria."
+    priority: high
+
+  - id: art-xi
+    text: "Mode governance: clarity (read all, write chati.dev/), build (full), deploy (full + infra)."
+    priority: critical
+
+  - id: art-xii
+    text: "Context brackets are calculated, not hardcoded. CRITICAL = L0+L1 only. Handoff mandatory at < 15%."
+    priority: high
+
+  - id: art-xiii
+    text: "Memory capture is automatic. Never auto-modify user files. Proposals require explicit approval."
+    priority: high
+
+  - id: art-xiv
+    text: "Framework registry is source of truth. REUSE > ADAPT > CREATE preference."
+    priority: normal
+
+  - id: art-xv
+    text: "Session lock is mandatory when session is active. Exit requires explicit user intent."
+    priority: critical
+
+  - id: art-xvi
+    text: "Model governance: respect per-agent model assignments. No downgrade from assigned model."
+    priority: high

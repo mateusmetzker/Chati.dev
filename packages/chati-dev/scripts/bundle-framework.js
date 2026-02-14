@@ -35,7 +35,9 @@ const dirs = [
   'agents/clarity', 'agents/quality', 'agents/build', 'agents/deploy',
   'templates', 'workflows', 'quality-gates',
   'schemas', 'frameworks', 'intelligence', 'patterns',
+  'hooks', 'domains',
   'i18n', 'migrations', 'data',
+  'tasks', 'context',
 ];
 
 for (const dir of dirs) {

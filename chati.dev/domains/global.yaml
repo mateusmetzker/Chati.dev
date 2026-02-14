@@ -1,0 +1,64 @@
+# Global Domain — Coding standards, bracket behavior, mode constraints
+# Injected by PRISM L1 layer
+
+rules:
+  - id: code-english
+    text: "All code, comments, and variable names must be in English."
+    priority: high
+
+  - id: code-conventions
+    text: "Follow existing codebase conventions. Check patterns before creating new ones."
+    priority: normal
+
+  - id: artifacts-english
+    text: "All artifacts (PRD, architecture docs, task definitions) must be in English."
+    priority: high
+
+  - id: interaction-lang
+    text: "Interact with user in their preferred language. Artifacts stay in English."
+    priority: normal
+
+modes:
+  clarity:
+    writeScope: "chati.dev/"
+    allowedActions:
+      - read_any_file
+      - write_chati_dev_only
+      - create_artifacts
+      - run_analysis
+    blockedActions:
+      - modify_project_code
+      - run_destructive_commands
+      - deploy
+
+  build:
+    writeScope: "*"
+    allowedActions:
+      - read_any_file
+      - write_any_file
+      - run_tests
+      - run_linting
+      - git_operations
+    blockedActions:
+      - deploy_to_production
+      - modify_infrastructure
+
+  deploy:
+    writeScope: "*"
+    allowedActions:
+      - read_any_file
+      - write_any_file
+      - deploy_to_production
+      - modify_infrastructure
+      - run_tests
+    blockedActions: []
+
+brackets:
+  FRESH:
+    behavior: "Full context injection. All layers active. Include detailed rules and examples."
+  MODERATE:
+    behavior: "Standard injection. Skip task detail layer (L4). Summarize long rules."
+  DEPLETED:
+    behavior: "Minimal injection. Only L0+L1+L2. Use rule IDs instead of full text."
+  CRITICAL:
+    behavior: "Emergency. L0+L1 only. Trigger handoff advisory. Preserve essential state."

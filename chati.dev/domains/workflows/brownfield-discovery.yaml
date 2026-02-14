@@ -1,0 +1,16 @@
+# Brownfield Discovery Workflow Domain — PRISM L3
+# Discovery-only pipeline (no implementation)
+
+steps:
+  - brownfield-wu
+  - brief
+  - detail
+  - architect
+
+rules:
+  - id: disc-deep
+    text: "Deep discovery is mandatory. Analyze full codebase before proceeding."
+    priority: critical
+  - id: disc-readonly
+    text: "Discovery workflow does not modify project code."
+    priority: high

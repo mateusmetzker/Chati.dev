@@ -15,7 +15,7 @@ function showBanner() {
   try {
     logoText = readFileSync(join(__dirname, '..', 'assets', 'logo.txt'), 'utf-8');
   } catch {
-    logoText = 'chati.dev';
+    logoText = 'Chati.dev';
   }
   logBanner(logoText, pkg.version);
 }
@@ -55,7 +55,7 @@ async function main() {
       }
 
       if (result.hasUpdate) {
-        console.log(`chati.dev v${result.currentVersion} -> v${result.latestVersion} available`);
+        console.log(`Chati.dev v${result.currentVersion} -> v${result.latestVersion} available`);
         console.log();
         for (const line of result.changes || []) {
           console.log(line);
@@ -63,7 +63,7 @@ async function main() {
         console.log();
         console.log("Run 'npx chati-dev upgrade' to update.");
       } else {
-        console.log(`chati.dev v${result.currentVersion} is up to date.`);
+        console.log(`Chati.dev v${result.currentVersion} is up to date.`);
       }
       break;
     }
@@ -79,11 +79,11 @@ async function main() {
 
       const currentVersion = getCurrentVersion(targetDir);
       if (!currentVersion) {
-        console.error('No chati.dev installation found. Run `npx chati-dev init` first.');
+        console.error('No Chati.dev installation found. Run `npx chati-dev init` first.');
         process.exit(1);
       }
 
-      console.log(`Upgrading chati.dev v${currentVersion} -> v${targetVersion}...`);
+      console.log(`Upgrading Chati.dev v${currentVersion} -> v${targetVersion}...`);
 
       // 1. Create backup
       console.log('  Creating backup...');
@@ -118,7 +118,7 @@ async function main() {
       updateConfigVersion(targetDir, targetVersion);
 
       console.log();
-      console.log(`chati.dev upgraded to v${targetVersion} successfully.`);
+      console.log(`Chati.dev upgraded to v${targetVersion} successfully.`);
       break;
     }
 
@@ -235,7 +235,7 @@ async function main() {
       const { runHealthCheck } = await import('../src/intelligence/registry-manager.js');
       const checks = runHealthCheck(targetDir);
 
-      console.log('chati.dev Health Check');
+      console.log('Chati.dev Health Check');
       console.log('='.repeat(30));
       console.log(`  Registry:     ${checks.registry.pass ? 'PASS' : 'FAIL'}  ${checks.registry.details}`);
       console.log(`  Schemas:      ${checks.schemas.pass ? 'PASS' : 'FAIL'}  ${checks.schemas.details}`);
@@ -248,7 +248,7 @@ async function main() {
     }
 
     case 'changelog': {
-      console.log(`chati.dev v${pkg.version} Changelog`);
+      console.log(`Chati.dev v${pkg.version} Changelog`);
       console.log('═'.repeat(40));
       console.log();
       console.log('v1.0.0 - Initial Release');

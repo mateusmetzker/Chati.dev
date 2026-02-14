@@ -160,4 +160,4 @@ If Smart Continuation is insufficient, the orchestrator spawns a new session:
 
 ---
 
-*Context Engine v1.0 — chati.dev Intelligence Layer*
+*Context Engine v1.0 — Chati.dev Intelligence Layer*

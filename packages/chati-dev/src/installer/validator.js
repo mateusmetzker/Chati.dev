@@ -16,6 +16,7 @@ export async function validateInstallation(targetDir) {
     intelligence: { pass: false, details: [] },
     registry: { pass: false, details: [] },
     memories: { pass: false, details: [] },
+    context: { pass: false, details: [] },
     total: 0,
     passed: 0,
   };
@@ -59,7 +60,7 @@ export async function validateInstallation(targetDir) {
   if (existsSync(constitutionPath)) {
     const content = readFileSync(constitutionPath, 'utf-8');
     const articleCount = (content.match(/^## Article/gm) || []).length;
-    results.constitution.pass = articleCount >= 16;
+    results.constitution.pass = articleCount >= 17;
     results.constitution.details.push({ articleCount });
   }
   results.total += 1;
@@ -148,6 +149,22 @@ export async function validateInstallation(targetDir) {
   results.memories.pass = existsSync(memoriesPath) && existsSync(memoriesShared);
   results.total += 1;
   if (results.memories.pass) results.passed += 1;
+
+  // Check context files (source in chati.dev/context/, deployed to .claude/rules/chati/)
+  const contextFileNames = ['root.md', 'governance.md', 'protocols.md', 'quality.md'];
+  let contextCount = 0;
+  for (const file of contextFileNames) {
+    // Check source (chati.dev/context/) OR deployed (.claude/rules/chati/)
+    const inSource = existsSync(join(targetDir, 'chati.dev', 'context', file));
+    const inRules = existsSync(join(targetDir, '.claude', 'rules', 'chati', file));
+    if (inSource || inRules) {
+      contextCount++;
+    }
+  }
+  results.context.pass = contextCount === 4;
+  results.context.details.push({ found: contextCount, expected: 4 });
+  results.total += 1;
+  if (results.context.pass) results.passed += 1;
 
   return results;
 }

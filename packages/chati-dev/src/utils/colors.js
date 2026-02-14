@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-// chati.dev brand color: steel blue
+// Chati.dev brand color: steel blue
 export const brand = chalk.hex('#6BA4DC');
 export const dim = chalk.dim;
 export const bold = chalk.bold;

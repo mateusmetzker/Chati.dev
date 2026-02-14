@@ -25,7 +25,7 @@ export function logBanner(logoText, version) {
   for (const line of lines) {
     console.log(brand(line));
   }
-  console.log(brand(`chati.dev v${version}`));
+  console.log(brand(`Chati.dev v${version}`));
   console.log(dim('AI-Powered Multi-Agent Orchestration System'));
   console.log(dim('═'.repeat(55)));
   console.log();

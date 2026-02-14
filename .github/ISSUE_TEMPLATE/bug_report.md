@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a bug in chati.dev
+about: Report a bug in Chati.dev
 title: "[Bug] "
 labels: bug
 assignees: ''
@@ -26,7 +26,7 @@ What actually happens.
 
 ## Environment
 
-- **chati.dev version**: (run `npx chati-dev --version`)
+- **Chati.dev version**: (run `npx chati-dev --version`)
 - **Node.js version**: (run `node -v`)
 - **IDE**: (e.g., Claude Code, VS Code, Cursor)
 - **OS**: (e.g., macOS 15, Ubuntu 24, Windows 11)

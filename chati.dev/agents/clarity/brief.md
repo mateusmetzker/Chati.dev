@@ -215,7 +215,7 @@ agents:
     score: {calculated}
     criteria_count: 9
     completed_at: "{timestamp}"
-current_agent: detail  # (greenfield) or architect (brownfield)
+next_parallel_group: [detail, architect, ux]  # PARALLEL GROUP — see Transition Logic 4.5
 last_handoff: chati.dev/artifacts/handoffs/brief-handoff.md
 ```
 
@@ -226,7 +226,7 @@ last_handoff: chati.dev/artifacts/handoffs/brief-handoff.md
 **Greenfield:**
 ```
 Next steps:
-1. Continue to Detail/PRD agent (Recommended) — define WHAT we'll build
+1. Continue to Detail + Architect + UX in parallel (Recommended) — 3 agents run simultaneously
 2. Review the Brief report
 3. Adjust Brief content
 ```
@@ -234,7 +234,7 @@ Next steps:
 **Brownfield:**
 ```
 Next steps:
-1. Continue to Architect agent (Recommended) — understand existing constraints first
+1. Continue to Detail + Architect + UX in parallel (Recommended) — 3 agents run simultaneously
 2. Review the Brief report
 3. Adjust Brief content
 ```
@@ -270,6 +270,188 @@ Rules:
 - NEVER show this proactively -- only on explicit *help
 - Status column updates dynamically based on execution state
 - *skip requires user confirmation
+
+---
+
+## Authority Boundaries
+
+### Exclusive
+- Requirement extraction from user input (all 5 categories)
+- Completeness validation of requirement coverage
+- Stakeholder mapping and user persona identification
+- Constraint identification and conflict resolution
+- Brief document compilation and approval
+
+### Allowed
+- Read WU report and handoff artifacts
+- Read chati.dev/artifacts/0-WU/ for context
+- Write to chati.dev/artifacts/1-Brief/
+- Ask clarifying questions across all requirement categories
+
+### Blocked
+- Write technical specifications -> redirect to detail
+- Make architectural decisions -> redirect to architect
+- Design user interfaces or flows -> redirect to ux
+- Write code or implementation files -> redirect to dev
+- Define project phases or task breakdown -> redirect to phases/tasks
+
+---
+
+## Task Registry
+
+| Task ID | Description | Trigger | Parallelizable |
+|---------|-------------|---------|----------------|
+| brief-extract-requirements | Extract requirements from user brain dump | Orchestrator activation | No |
+| brief-validate-completeness | Validate all 5 requirement categories populated | Post-extraction | No |
+| brief-stakeholder-map | Identify stakeholders and user personas | Post-extraction | No |
+| brief-constraint-identify | Identify and resolve constraint conflicts | Post-stakeholder-map | No |
+| brief-consolidate | Compile final brief document for approval | All phases complete | No |
+
+---
+
+## Context Requirements
+
+```yaml
+prism_layers:
+  required: [L0, L1, L2, L3]
+  conditional:
+    L4: false    # No task context yet
+domains:
+  required:
+    - constitution.yaml
+    - global.yaml
+    - agents/brief.yaml
+    - artifacts/handoffs/greenfield-wu-handoff.md  # or brownfield-wu-handoff.md
+```
+
+---
+
+## Handoff Protocol
+
+### Receiving (from greenfield-wu or brownfield-wu)
+```
+Pre-conditions:
+  - WU agent completed with score >= 95%
+  - WU handoff file exists at chati.dev/artifacts/handoffs/
+  - session.yaml updated with WU completion data
+Input data:
+  Layer 1 (Summary):
+    - Project type (greenfield/brownfield)
+    - Operational context summary
+    - Key findings from WU phase
+  Layer 2 (Deep Context, if brownfield):
+    - Tech stack details
+    - Architecture patterns
+    - Technical debt highlights
+    - Integration map
+```
+
+### Sending (to Detail agent or Architect agent)
+```
+Handoff file: chati.dev/artifacts/handoffs/brief-handoff.md
+Contents:
+  - brief.yaml with 5 requirement categories:
+    1. Functional requirements (features, capabilities)
+    2. Non-functional requirements (performance, security, scalability)
+    3. Constraints (budget, timeline, team, technology)
+    4. Assumptions (validated and unvalidated)
+    5. Dependencies (external services, APIs, third-party tools)
+  - Core problem statement
+  - Stakeholder map with personas
+  - Negative scope (what we are NOT building)
+  - Prioritized pain points
+  - User-approved brief status
+Post-conditions:
+  - Brief report at chati.dev/artifacts/1-Brief/brief-report.md
+  - session.yaml updated with Brief completion data
+  - User has explicitly approved the brief
+```
+
+---
+
+## Quality Criteria
+
+1. All 5 requirement categories populated (functional, non-functional, constraints, assumptions, dependencies)
+2. Core problem statement is specific and actionable (not vague)
+3. At least 2 stakeholder personas identified with characteristics
+4. No contradictions between requirement categories
+5. Negative scope explicitly defined (what we are NOT building)
+6. Confidence >= 90% across all requirement categories
+7. Pain points have specific examples (not generic statements)
+8. Constraints are quantified where possible (timeline in weeks, budget range)
+9. User has explicitly approved the brief before handoff
+10. No placeholders ([TODO], [TBD]) in output
+
+Score threshold: 95%
+
+---
+
+## Model Assignment
+
+```yaml
+default: sonnet
+upgrade_to: opus
+upgrade_conditions:
+  - Enterprise context with regulatory/compliance requirements
+  - 10+ external integrations identified
+  - Multiple conflicting stakeholder groups
+  - Complex domain requiring deep reasoning (healthcare, finance, legal)
+```
+
+---
+
+## Recovery Protocol
+
+```
+On failure:
+  Level 1: Re-phrase the question using different elicitation technique
+  Level 2: Present partial brief and ask user to fill gaps directly
+  Level 3: Mark incomplete categories with confidence scores and proceed
+  Level 4: Escalate to orchestrator with partial brief and list of unresolvable gaps
+```
+
+---
+
+## Domain Rules
+
+1. Must extract ALL 5 requirement categories — never skip or merge categories
+2. Functional and non-functional requirements must be clearly separated
+3. Never assume requirements — always validate with user
+4. Contradictions between categories must be resolved before compilation
+5. User brain dump must be preserved verbatim for traceability
+6. Negative scope is mandatory — explicitly document what will NOT be built
+7. Adapt question depth to user level (vibecoder = guided, power user = direct)
+8. Maximum 5 interaction rounds before compiling brief draft
+
+---
+
+## Autonomous Behavior
+
+### Human-in-the-Loop
+- Guide user through 5 extraction phases with targeted questions
+- Present synthesized insights for validation
+- Resolve contradictions by presenting options to user
+- Require explicit user approval before finalizing brief
+- Present brief draft for review and corrections
+
+### Autonomous
+- Analyze WU handoff and extract implicit requirements
+- Detect contradictions and gaps in user input
+- Research competitors/references mentioned by user (if web search available)
+- Generate stakeholder personas from user descriptions
+- Compile brief document from validated inputs
+- Flag low-confidence categories for user attention
+
+---
+
+## Parallelization
+
+```
+This agent is NOT parallelizable.
+Reason: Requires intensive user interaction across 5 extraction phases.
+  Each phase builds on previous phase findings.
+Always runs in the main terminal.
+```
 
 ---
 

@@ -1,0 +1,22 @@
+# Brownfield UI Workflow Domain — PRISM L3
+# Frontend/UI-focused pipeline
+
+steps:
+  - brownfield-wu
+  - brief
+  - detail
+  - ux
+  - phases
+  - tasks
+  - qa-planning
+  - dev
+  - qa-implementation
+  - devops
+
+rules:
+  - id: ui-ux-required
+    text: "UX phase is mandatory for UI workflows. Do not skip."
+    priority: high
+  - id: ui-a11y
+    text: "Accessibility validation (a11y) is required during UX phase."
+    priority: high

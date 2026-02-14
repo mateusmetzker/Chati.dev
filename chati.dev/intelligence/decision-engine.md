@@ -96,7 +96,7 @@ npx chati-dev health
 Checks:
 1. All registered entities exist on disk
 2. Schema files are valid JSON
-3. Constitution has >= 16 articles
+3. Constitution has >= 17 articles
 4. Agents contain required protocol references
 5. Entity count matches actual file count
 6. Checksums match (if calculated)
@@ -131,4 +131,4 @@ Example output:
 
 ---
 
-*Decision Engine v1.0 — chati.dev Intelligence Layer*
+*Decision Engine v1.0 — Chati.dev Intelligence Layer*

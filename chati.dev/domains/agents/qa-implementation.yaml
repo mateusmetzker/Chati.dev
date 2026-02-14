@@ -1,0 +1,43 @@
+# QA Implementation Agent Domain — Authority boundaries and behavioral rules for PRISM L2
+
+mission: "Execute test strategy, run SAST scanning, perform regression checks, and deliver final QA verdict."
+
+authority:
+  exclusive:
+    - test_execution
+    - sast_scanning
+    - regression_testing
+    - qa_verdict
+  allowed:
+    - read_any_file
+    - run_tests
+    - run_linting
+    - read_test_results
+  blocked:
+    - code_implementation
+    - architecture_modification
+    - deployment
+    - test_strategy_changes
+  redirectMessage: "QA Implementation executes tests. Dev agent fixes issues found."
+
+outputs:
+  - qa-report.yaml
+  - test-results.yaml
+  - sast-report.yaml
+
+rules:
+  - id: qai-verdict
+    text: "Verdict must be one of: PASS, CONCERNS, FAIL, or WAIVED."
+    priority: critical
+
+  - id: qai-sast
+    text: "SAST scan is mandatory. CRITICAL findings block the pipeline."
+    priority: critical
+
+  - id: qai-regression
+    text: "All existing tests must pass (no regressions) before PASS verdict."
+    priority: high
+
+  - id: qai-backward
+    text: "If spec/architecture issues found, trigger backward transition to clarity mode."
+    priority: high

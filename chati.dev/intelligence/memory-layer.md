@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Memory Layer adds persistent knowledge to the chati.dev system. While session state (agent scores, pipeline position) is stored in `.chati/session.yaml`, the Memory Layer captures **knowledge** — decisions, patterns, errors, and lessons — that persists across sessions.
+The Memory Layer adds persistent knowledge to the Chati.dev system. While session state (agent scores, pipeline position) is stored in `.chati/session.yaml`, the Memory Layer captures **knowledge** — decisions, patterns, errors, and lessons — that persists across sessions.
 
 ---
 
@@ -184,4 +184,4 @@ This prevents cross-contamination while enabling knowledge sharing.
 
 ---
 
-*Memory Layer v1.0 — chati.dev Intelligence Layer*
+*Memory Layer v1.0 — Chati.dev Intelligence Layer*

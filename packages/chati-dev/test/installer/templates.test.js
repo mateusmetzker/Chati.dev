@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import yaml from 'js-yaml';
-import { generateSessionYaml, generateConfigYaml, generateClaudeMd } from '../../src/installer/templates.js';
+import { generateSessionYaml, generateConfigYaml, generateClaudeMd, generateClaudeLocalMd } from '../../src/installer/templates.js';
 
 const testConfig = {
   projectName: 'test-project',
@@ -75,19 +75,52 @@ describe('generateClaudeMd', () => {
     assert.ok(result.includes('test-project'));
   });
 
-  it('includes session lock block', () => {
+  it('references .claude/rules/chati/ for framework rules', () => {
     const result = generateClaudeMd(testConfig);
-    assert.ok(result.includes('SESSION-LOCK:INACTIVE'));
+    assert.ok(result.includes('.claude/rules/chati/'));
   });
 
-  it('includes pipeline info', () => {
+  it('references CLAUDE.local.md for runtime state', () => {
     const result = generateClaudeMd(testConfig);
-    assert.ok(result.includes('CLARITY'));
-    assert.ok(result.includes('DEPLOY'));
+    assert.ok(result.includes('CLAUDE.local.md'));
+  });
+
+  it('is minimal (no inline framework content)', () => {
+    const result = generateClaudeMd(testConfig);
+    // Should NOT contain session lock, pipeline details, or key files inline
+    assert.ok(!result.includes('SESSION-LOCK'));
+    assert.ok(!result.includes('constitution.md'));
+    assert.ok(!result.includes('session.yaml'));
+    // Should NOT use @ imports
+    assert.ok(!result.includes('@chati.dev'));
   });
 
   it('includes project type', () => {
     const result = generateClaudeMd(testConfig);
     assert.ok(result.includes('Greenfield'));
+  });
+
+  it('includes brownfield type when configured', () => {
+    const result = generateClaudeMd({ ...testConfig, projectType: 'brownfield' });
+    assert.ok(result.includes('Brownfield'));
+  });
+});
+
+describe('generateClaudeLocalMd', () => {
+  it('includes session lock marker', () => {
+    const result = generateClaudeLocalMd();
+    assert.ok(result.includes('SESSION-LOCK:INACTIVE'));
+  });
+
+  it('includes runtime state fields', () => {
+    const result = generateClaudeLocalMd();
+    assert.ok(result.includes('Agent'));
+    assert.ok(result.includes('Pipeline'));
+    assert.ok(result.includes('Mode'));
+  });
+
+  it('starts with inactive session', () => {
+    const result = generateClaudeLocalMd();
+    assert.ok(result.includes('INACTIVE'));
   });
 });

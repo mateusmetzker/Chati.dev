@@ -2,18 +2,18 @@
   "name": "chati-dev-monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "chati.dev — AI-Powered Multi-Agent Orchestration System",
-  "author": "chati.dev",
+  "description": "Chati.dev — AI-Powered Multi-Agent Orchestration System",
+  "author": "Chati.dev",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ogabrielalonso/chati-dev.git"
+    "url": "https://github.com/ogabrielalonso/Chati.dev.git"
   },
   "workspaces": [
     "packages/*"
   ],
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=20.0.0",
     "npm": ">=9.0.0"
   },
   "scripts": {
