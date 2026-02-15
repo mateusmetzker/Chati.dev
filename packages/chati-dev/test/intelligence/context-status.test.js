@@ -14,7 +14,7 @@ describe('context-status', () => {
     writeFileSync(join(tempDir, '.chati', 'session.yaml'), `project:
   name: test
   type: greenfield
-  state: clarity
+  state: planning
 current_agent: brief
 language: en
 agents:
@@ -48,7 +48,7 @@ agents:
 
   it('includes pipeline state', () => {
     const status = getContextStatus(tempDir);
-    assert.equal(status.pipelineState, 'clarity');
+    assert.equal(status.pipelineState, 'planning');
   });
 
   it('counts completed agents', () => {

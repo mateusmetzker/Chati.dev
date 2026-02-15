@@ -19,7 +19,7 @@ import yaml from 'js-yaml';
  * Expected agents organized by category.
  */
 export const EXPECTED_AGENTS = {
-  clarity: ['greenfield-wu', 'brownfield-wu', 'brief', 'detail', 'architect', 'ux', 'phases', 'tasks'],
+  planning: ['greenfield-wu', 'brownfield-wu', 'brief', 'detail', 'architect', 'ux', 'phases', 'tasks'],
   quality: ['qa-planning', 'qa-implementation'],
   build: ['dev'],
   deploy: ['devops'],

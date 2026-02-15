@@ -83,7 +83,7 @@ const WEIGHTS = {
  * Context boost multipliers based on current mode.
  */
 const MODE_CONTEXT_BOOST = {
-  clarity: {
+  planning: {
     [INTENT_TYPES.PLANNING]: 1.5,
     [INTENT_TYPES.IMPLEMENTATION]: 0.5,
   },
@@ -198,11 +198,11 @@ function buildReasoning(intent, keywords, context) {
  * Get intent-to-phase mapping.
  *
  * @param {string} intent
- * @returns {string} Target phase (clarity, build, deploy)
+ * @returns {string} Target phase (planning, build, deploy)
  */
 export function getIntentPhase(intent) {
   const phaseMap = {
-    [INTENT_TYPES.PLANNING]: 'clarity',
+    [INTENT_TYPES.PLANNING]: 'planning',
     [INTENT_TYPES.IMPLEMENTATION]: 'build',
     [INTENT_TYPES.REVIEW]: 'build',
     [INTENT_TYPES.DEPLOY]: 'deploy',
@@ -243,7 +243,7 @@ export function checkModeAlignment(intent, currentMode) {
   }
 
   // Check if mode change is allowed
-  const modeOrder = ['clarity', 'build', 'deploy'];
+  const modeOrder = ['planning', 'build', 'deploy'];
   const currentIndex = modeOrder.indexOf(currentMode);
   const targetIndex = modeOrder.indexOf(targetPhase);
 

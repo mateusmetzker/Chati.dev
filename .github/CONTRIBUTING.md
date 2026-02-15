@@ -70,7 +70,7 @@ Then open a Pull Request on GitHub.
 
 ### Prerequisites
 
-- **Node.js** >= 18.0.0
+- **Node.js** >= 20.0.0
 - **npm** >= 9.0.0
 - **Git**
 
@@ -89,9 +89,10 @@ chati-dev/
 │   ├── constitution.md       # 17 Articles + Preamble
 │   └── docs/                 # Upgrade specs
 ├── packages/
-│   └── chati-dev/            # CLI installer (npm package)
+│   └── chati-dev/            # CLI + runtime engine (npm package)
 │       ├── bin/              # Entry point
 │       ├── src/              # Source code (ESM)
+│       ├── test/             # Unit tests (node:test)
 │       └── framework/        # Bundled framework (auto-generated)
 └── .github/                  # GitHub templates and config
 ```
@@ -99,8 +100,14 @@ chati-dev/
 ### Testing Changes Locally
 
 ```bash
-# Test the installer
+# Run unit tests (901 tests)
 cd packages/chati-dev
+npm test
+
+# Lint
+npm run lint
+
+# Test the installer
 node bin/chati.js init /tmp/test-project
 
 # Test the dashboard
@@ -130,7 +137,7 @@ Agents live in `chati.dev/agents/{category}/`. Each agent is a Markdown file wit
 ## Identity
 - **Role**: ...
 - **Pipeline Position**: After {previous}, Before {next}
-- **Category**: CLARITY | Quality | BUILD | DEPLOY
+- **Category**: PLANNING | Quality | BUILD | DEPLOY
 
 ## Mission
 One paragraph describing what this agent does and why.
@@ -261,6 +268,9 @@ The CLI package lives in `packages/chati-dev/`. It's a pure ESM Node.js package.
 | `src/dashboard/` | TUI dashboard (data reader, layout, renderer) |
 | `src/upgrade/` | Upgrade system (checker, backup, migrator) |
 | `src/config/` | IDE and MCP configurations |
+| `src/terminal/` | Multi-terminal spawner, monitor, collector, prompt builder, handoff parser |
+| `src/context/` | PRISM context engine (5-layer injection pipeline) |
+| `src/tasks/` | Handoff management (build, save, load, format) |
 | `src/utils/` | Colors, logger, detector |
 
 ### Guidelines

@@ -34,7 +34,7 @@ What actually happens.
 ## Agent Context (if applicable)
 
 - **Active agent**: (e.g., Brief, Dev, QA-Planning)
-- **Pipeline stage**: (e.g., CLARITY, BUILD, DEPLOY)
+- **Pipeline stage**: (e.g., PLANNING, BUILD, DEPLOY)
 - **Session state**: (paste relevant section of `.chati/session.yaml`)
 
 ## Additional Context

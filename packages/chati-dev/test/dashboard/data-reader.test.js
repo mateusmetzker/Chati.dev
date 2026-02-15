@@ -17,7 +17,7 @@ describe('readDashboardData', () => {
       'project:',
       '  name: test-project',
       '  type: greenfield',
-      '  state: clarity',
+      '  state: planning',
       'language: en',
       'agents:',
       '  brief:',

@@ -1,0 +1,44 @@
+{
+  "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/schema/hooks.json",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": ".*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node chati.dev/hooks/prism-engine.js"
+          },
+          {
+            "type": "command",
+            "command": "node chati.dev/hooks/model-governance.js"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node chati.dev/hooks/mode-governance.js"
+          },
+          {
+            "type": "command",
+            "command": "node chati.dev/hooks/constitution-guard.js"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node chati.dev/hooks/constitution-guard.js"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+# Brownfield Fullstack Workflow Domain — PRISM L3
+# Full pipeline for existing projects (deep discovery required)
+
+steps:
+  - brownfield-wu
+  - brief
+  - detail
+  - architect
+  - ux
+  - phases
+  - tasks
+  - qa-planning
+  - dev
+  - qa-implementation
+  - devops
+
+rules:
+  - id: bf-deep
+    text: "Brownfield ALWAYS uses deep discovery. No Quick or Scout modes."
+    priority: critical
+  - id: bf-preserve
+    text: "Existing codebase conventions must be respected. REUSE > ADAPT > CREATE."
+    priority: high
+  - id: bf-risk
+    text: "Risk assessment from WU must be addressed in architecture decisions."
+    priority: high

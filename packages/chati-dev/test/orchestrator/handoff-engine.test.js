@@ -103,7 +103,7 @@ describe('handoff-engine', () => {
         fromTask: {
           id: 'brief-001',
           agent: 'brief',
-          phase: 'clarity',
+          phase: 'planning',
           outputs: ['brief.md'],
           criteria: ['Create project brief', 'Define scope'],
         },
@@ -145,7 +145,7 @@ describe('handoff-engine', () => {
         task: {
           id: 'detail-001',
           agent: 'detail',
-          phase: 'clarity',
+          phase: 'planning',
           outputs: ['detail.md'],
           criteria: [],
         },
@@ -202,7 +202,7 @@ describe('handoff-engine', () => {
           task: {
             id: `${agent}-001`,
             agent,
-            phase: 'clarity',
+            phase: 'planning',
             outputs: [`${agent}.md`],
             criteria: [],
           },
@@ -246,7 +246,7 @@ describe('handoff-engine', () => {
           task: {
             id: `${agent}-001`,
             agent,
-            phase: 'clarity',
+            phase: 'planning',
             outputs: [`${agent}.md`],
             criteria: [],
           },
@@ -275,7 +275,7 @@ describe('handoff-engine', () => {
         task: {
           id: 'brief-001',
           agent: 'brief',
-          phase: 'clarity',
+          phase: 'planning',
           outputs: ['brief.md'],
           criteria: [],
         },

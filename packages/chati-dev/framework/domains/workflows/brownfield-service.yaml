@@ -1,0 +1,22 @@
+# Brownfield Service Workflow Domain — PRISM L3
+# Backend/API-focused pipeline (skip UX)
+
+steps:
+  - brownfield-wu
+  - brief
+  - detail
+  - architect
+  - phases
+  - tasks
+  - qa-planning
+  - dev
+  - qa-implementation
+  - devops
+
+rules:
+  - id: svc-no-ux
+    text: "Service workflow skips UX agent. Focus on API and backend."
+    priority: high
+  - id: svc-api
+    text: "API design is mandatory in architect phase."
+    priority: high

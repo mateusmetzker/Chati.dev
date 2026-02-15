@@ -3,17 +3,18 @@ import { readFileSync } from 'fs';
 import { join, dirname, basename } from 'path';
 import { fileURLToPath } from 'url';
 import { logBanner } from '../utils/logger.js';
-import { stepLanguage, stepProjectType, stepIDEs, stepMCPs, stepConfirmation } from './questions.js';
+import { stepLanguage, stepProjectType, stepConfirmation } from './questions.js';
 import { createSpinner, showStep, showValidation, showQuickStart } from './feedback.js';
 import { installFramework } from '../installer/core.js';
 import { validateInstallation } from '../installer/validator.js';
 import { t } from './i18n.js';
+import { DEFAULT_MCPS } from '../config/mcp-configs.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const VERSION = JSON.parse(readFileSync(join(__dirname, '..', '..', 'package.json'), 'utf-8')).version;
 
 /**
- * Run the 6-step installer wizard
+ * Run the 4-step installer wizard
  */
 export async function runWizard(targetDir, options = {}) {
   // Load ASCII logo
@@ -34,13 +35,11 @@ export async function runWizard(targetDir, options = {}) {
   // Step 2: Project Type
   const projectType = options.projectType || await stepProjectType(targetDir);
 
-  // Step 3: IDE Selection
-  const selectedIDEs = options.ides || await stepIDEs();
+  // Auto-configured: Claude Code + default MCPs
+  const selectedIDEs = options.ides || ['claude-code'];
+  const selectedMCPs = options.mcps || DEFAULT_MCPS;
 
-  // Step 4: MCP Selection
-  const selectedMCPs = options.mcps || await stepMCPs(projectType);
-
-  // Step 5: Confirmation
+  // Step 3: Confirmation
   const projectName = basename(targetDir);
   const config = {
     projectName,
@@ -54,7 +53,7 @@ export async function runWizard(targetDir, options = {}) {
 
   await stepConfirmation(config);
 
-  // Step 6: Installation + Validation
+  // Step 4: Installation + Validation
   console.log();
   const installSpinner = createSpinner(t('installer.installing'));
   installSpinner.start();
@@ -71,10 +70,7 @@ export async function runWizard(targetDir, options = {}) {
     showStep(t('installer.created_claude_md'));
     showStep(t('installer.created_memories'));
     showStep(t('installer.installed_intelligence'));
-
-    if (selectedMCPs.length > 0) {
-      showStep(`${t('installer.configured_mcps')} ${selectedMCPs.join(', ')}`);
-    }
+    showStep(`${t('installer.configured_mcps')} ${selectedMCPs.join(', ')}`);
 
     // Validation
     console.log();
@@ -96,9 +92,8 @@ export async function runWizard(targetDir, options = {}) {
     console.log();
     p.outro(t('installer.success'));
 
-    const primaryIDE = selectedIDEs[0] || 'your IDE';
     showQuickStart(t('installer.quick_start_title'), [
-      `${t('installer.quick_start_1')} (${primaryIDE})`,
+      `${t('installer.quick_start_1')} (Claude Code)`,
       t('installer.quick_start_2'),
       t('installer.quick_start_3'),
     ]);

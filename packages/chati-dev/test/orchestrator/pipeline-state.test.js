@@ -74,14 +74,14 @@ describe('pipeline-state', () => {
     });
 
     it('should save mode field', () => {
-      const state = initPipeline({ isGreenfield: true, mode: 'clarity' });
+      const state = initPipeline({ isGreenfield: true, mode: 'planning' });
       savePipelineState(tempDir, state);
 
       const sessionPath = join(tempDir, '.chati', 'session.yaml');
       const content = readFileSync(sessionPath, 'utf8');
       const parsed = yaml.load(content);
 
-      assert.equal(parsed.mode, 'clarity');
+      assert.equal(parsed.mode, 'planning');
     });
 
     it('should save project_type as greenfield', () => {
@@ -159,7 +159,7 @@ describe('pipeline-state', () => {
 
       assert.equal(result.loaded, true);
       assert.ok(result.state);
-      assert.equal(result.state.phase, 'clarity');
+      assert.equal(result.state.phase, 'planning');
       assert.equal(result.state.isGreenfield, true);
     });
 
@@ -198,7 +198,7 @@ describe('pipeline-state', () => {
       const state = initPipeline({ isGreenfield: true });
       state.modeTransitions = [
         {
-          from: 'clarity',
+          from: 'planning',
           to: 'build',
           trigger: 'autonomous',
           timestamp: new Date().toISOString(),
@@ -210,7 +210,7 @@ describe('pipeline-state', () => {
 
       assert.ok(Array.isArray(result.state.modeTransitions));
       assert.equal(result.state.modeTransitions.length, 1);
-      assert.equal(result.state.modeTransitions[0].from, 'clarity');
+      assert.equal(result.state.modeTransitions[0].from, 'planning');
     });
 
     it('should load history', () => {
@@ -250,7 +250,7 @@ describe('pipeline-state', () => {
     });
 
     it('should update mode field', () => {
-      const state = initPipeline({ isGreenfield: true, mode: 'clarity' });
+      const state = initPipeline({ isGreenfield: true, mode: 'planning' });
       savePipelineState(tempDir, state);
 
       updatePipelineState(tempDir, { phase: 'build' });

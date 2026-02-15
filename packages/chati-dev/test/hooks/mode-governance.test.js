@@ -21,9 +21,9 @@ describe('mode-governance hook', () => {
   });
 
   describe('getCurrentMode', () => {
-    it('returns clarity as default when no session', () => {
+    it('returns planning as default when no session', () => {
       const mode = getCurrentMode('/nonexistent');
-      assert.equal(mode, 'clarity');
+      assert.equal(mode, 'planning');
     });
 
     it('reads mode from session.yaml', () => {
@@ -38,20 +38,20 @@ describe('mode-governance hook', () => {
   });
 
   describe('isPathAllowed', () => {
-    it('clarity allows writes to chati.dev/', () => {
-      assert.equal(isPathAllowed('chati.dev/agents/test.md', projectDir, 'clarity'), true);
+    it('planning allows writes to chati.dev/', () => {
+      assert.equal(isPathAllowed('chati.dev/agents/test.md', projectDir, 'planning'), true);
     });
 
-    it('clarity allows writes to .chati/', () => {
-      assert.equal(isPathAllowed('.chati/session.yaml', projectDir, 'clarity'), true);
+    it('planning allows writes to .chati/', () => {
+      assert.equal(isPathAllowed('.chati/session.yaml', projectDir, 'planning'), true);
     });
 
-    it('clarity blocks writes to project code', () => {
-      assert.equal(isPathAllowed('src/app.js', projectDir, 'clarity'), false);
+    it('planning blocks writes to project code', () => {
+      assert.equal(isPathAllowed('src/app.js', projectDir, 'planning'), false);
     });
 
-    it('clarity blocks writes to root files', () => {
-      assert.equal(isPathAllowed('package.json', projectDir, 'clarity'), false);
+    it('planning blocks writes to root files', () => {
+      assert.equal(isPathAllowed('package.json', projectDir, 'planning'), false);
     });
 
     it('build allows writes anywhere', () => {
@@ -76,14 +76,14 @@ describe('mode-governance hook', () => {
   describe('MODE_SCOPES', () => {
     it('defines 3 modes', () => {
       assert.equal(Object.keys(MODE_SCOPES).length, 3);
-      assert.ok(MODE_SCOPES.clarity);
+      assert.ok(MODE_SCOPES.planning);
       assert.ok(MODE_SCOPES.build);
       assert.ok(MODE_SCOPES.deploy);
     });
 
-    it('clarity has restricted scope', () => {
-      assert.ok(MODE_SCOPES.clarity.allowed.length > 0);
-      assert.ok(!MODE_SCOPES.clarity.allowed.includes('*'));
+    it('planning has restricted scope', () => {
+      assert.ok(MODE_SCOPES.planning.allowed.length > 0);
+      assert.ok(!MODE_SCOPES.planning.allowed.includes('*'));
     });
 
     it('build has wildcard scope', () => {

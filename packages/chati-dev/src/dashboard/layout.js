@@ -21,7 +21,7 @@ function formatScore(score, status) {
  */
 function formatState(state) {
   const stateMap = {
-    clarity: brand('CLARITY'),
+    planning: brand('PLANNING'),
     build: yellow('BUILD'),
     validate: bold('VALIDATE'),
     deploy: green('DEPLOY'),
@@ -73,12 +73,12 @@ export function buildProjectInfo(data) {
 }
 
 /**
- * Build CLARITY section with agent scores
+ * Build PLANNING section with agent scores
  */
-export function buildClaritySection(data) {
+export function buildPlanningSection(data) {
   const scores = data.agentScores || {};
 
-  const clarityAgents = [
+  const planningAgents = [
     ['WU', scores['greenfield-wu'] || scores['brownfield-wu'] || { status: 'pending', score: 0 }],
     ['Brief', scores['brief'] || { status: 'pending', score: 0 }],
     ['Detail', scores['detail'] || { status: 'pending', score: 0 }],
@@ -89,16 +89,16 @@ export function buildClaritySection(data) {
     ['QA-P', scores['qa-planning'] || { status: 'pending', score: 0 }],
   ];
 
-  const row1 = clarityAgents.slice(0, 4)
+  const row1 = planningAgents.slice(0, 4)
     .map(([name, info]) => `${dim(name.padEnd(8))} ${formatScore(info.score, info.status)}`)
     .join('  ');
 
-  const row2 = clarityAgents.slice(4)
+  const row2 = planningAgents.slice(4)
     .map(([name, info]) => `${dim(name.padEnd(8))} ${formatScore(info.score, info.status)}`)
     .join('  ');
 
   return [
-    brand('│') + `  ${brand('── CLARITY')} ${'─'.repeat(46)}` + brand('│'),
+    brand('│') + `  ${brand('── PLANNING')} ${'─'.repeat(46)}` + brand('│'),
     brand('│') + `  │ ${row1}` + ' '.repeat(5) + brand('│'),
     brand('│') + `  │ ${row2}` + ' '.repeat(5) + brand('│'),
     brand('│') + `  ${'─'.repeat(57)}` + brand('│'),

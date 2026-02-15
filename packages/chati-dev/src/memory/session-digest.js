@@ -19,7 +19,7 @@ export function buildSessionDigest(projectDir, sessionState) {
     timestamp,
     date: dateStr,
     project: sessionState.project || {},
-    mode: sessionState.mode || 'clarity',
+    mode: sessionState.mode || 'planning',
     pipeline: sessionState.pipeline || {},
     agents: {},
     summary: {},

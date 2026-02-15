@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "chati.dev Memory Entry",
+  "description": "Schema for memory entry YAML frontmatter in .chati/memories/",
+  "type": "object",
+  "required": ["id", "type", "agent", "tags", "confidence", "sector", "tier", "created_at"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^mem-\\d{4}-\\d{2}-\\d{2}-\\d{3}$",
+      "description": "Unique memory identifier (mem-YYYY-MM-DD-NNN)"
+    },
+    "type": {
+      "enum": ["decision", "error_pattern", "resolution", "user_correction", "validated_pattern", "gotcha", "lesson"],
+      "description": "Classification of what this memory captures"
+    },
+    "agent": {
+      "type": "string",
+      "description": "Agent that created or owns this memory"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "Searchable tags for similarity matching and retrieval"
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "System confidence in this memory (0.0-1.0)"
+    },
+    "sector": {
+      "enum": ["episodic", "semantic", "procedural", "reflective"],
+      "description": "Cognitive sector: episodic (what happened), semantic (what we know), procedural (how to do it), reflective (what we learned)"
+    },
+    "tier": {
+      "enum": ["hot", "warm", "cold"],
+      "description": "Attention tier: hot (>0.7, auto-loaded), warm (0.3-0.7, on-demand), cold (<0.3, explicit search)"
+    },
+    "access_count": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "Number of times this memory has been accessed"
+    },
+    "evidence_count": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "Number of corroborating observations"
+    },
+    "last_accessed": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Timestamp of last access"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of memory creation"
+    },
+    "expires_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "Expiration timestamp (null for durable memories)"
+    },
+    "storage_tier": {
+      "enum": ["session", "daily", "durable"],
+      "default": "daily",
+      "description": "Storage persistence: session (cleaned on restart), daily (archived after 30d), durable (permanent)"
+    },
+    "scope": {
+      "enum": ["shared", "private"],
+      "default": "shared",
+      "description": "Visibility: shared (all agents) or private (owning agent only)"
+    }
+  }
+}

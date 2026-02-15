@@ -151,9 +151,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Mode Governance (Article XI)**: 3 modes (clarity, build, deploy) with autonomous transitions
-- **Autonomous transitions**: clarity->build (QA-Planning>=95%), build->validate (dev done), validate->deploy (QA-Impl approved)
-- **Backward transitions**: build/validate->clarity when QA finds spec/architecture issues
+- **Mode Governance (Article XI)**: 3 modes (planning, build, deploy) with autonomous transitions
+- **Autonomous transitions**: planning->build (QA-Planning>=95%), build->validate (dev done), validate->deploy (QA-Impl approved)
+- **Backward transitions**: build/validate->planning when QA finds spec/architecture issues
 - **New agent statuses**: skipped, needs_revalidation
 
 ## [1.0.0] - 2026-02-07
@@ -170,7 +170,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Frameworks**: Decision heuristics and quality dimensions
 - **Quality Gates**: Planning gate (traceability) and implementation gate (tests + SAST)
 - **i18n**: English, Portugues, Espanol, Francais
-- **CLI Installer**: `npx chati-dev init` with 6-step wizard
+- **CLI Installer**: `npx chati-dev init` with 4-step wizard
 - **Dashboard TUI**: `npx chati-dev status` with watch mode
 - **Upgrade System**: `npx chati-dev upgrade` with backup, migrations, and config merge
 - **6 IDE Support**: Claude Code, VS Code, AntiGravity, Cursor, Gemini CLI, GitHub Copilot

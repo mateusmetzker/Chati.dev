@@ -29,7 +29,7 @@ function createTempDir() {
 function setupProjectDir(tempDir, options = {}) {
   // Init session
   initSession(tempDir, {
-    mode: options.mode || 'clarity',
+    mode: options.mode || 'planning',
     isGreenfield: true,
     language: 'en',
   });
@@ -65,7 +65,7 @@ function setupProjectDir(tempDir, options = {}) {
         '---',
         `from_agent: ${agent}`,
         `from_task: ${agent}-task`,
-        'from_phase: clarity',
+        'from_phase: planning',
         'to: orchestrator',
         `timestamp: ${timestamp}`,
         `status: ${status}`,
@@ -359,7 +359,7 @@ describe('quality-gates', () => {
         },
       });
 
-      // Update session to mark clarity agents complete
+      // Update session to mark planning agents complete
       updateSession(dir, {
         completed_agents: ['brief', 'detail', 'architect', 'ux', 'phases', 'tasks', 'qa-planning'],
         agents: {

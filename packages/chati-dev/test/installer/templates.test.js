@@ -23,7 +23,7 @@ describe('generateSessionYaml', () => {
     const parsed = yaml.load(generateSessionYaml(testConfig));
     assert.equal(parsed.project.name, 'test-project');
     assert.equal(parsed.project.type, 'greenfield');
-    assert.equal(parsed.project.state, 'clarity');
+    assert.equal(parsed.project.state, 'planning');
   });
 
   it('initializes all 12 agents', () => {

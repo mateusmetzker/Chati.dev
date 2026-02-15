@@ -15,7 +15,7 @@ function setupFixtures() {
   rmSync(FIXTURES_DIR, { recursive: true, force: true });
 
   // Create a minimal framework structure
-  mkdirSync(join(FIXTURES_DIR, 'agents', 'clarity'), { recursive: true });
+  mkdirSync(join(FIXTURES_DIR, 'agents', 'planning'), { recursive: true });
   mkdirSync(join(FIXTURES_DIR, 'agents', 'build'), { recursive: true });
   mkdirSync(join(FIXTURES_DIR, 'orchestrator'), { recursive: true });
   mkdirSync(join(FIXTURES_DIR, 'schemas'), { recursive: true });
@@ -24,11 +24,11 @@ function setupFixtures() {
   mkdirSync(join(FIXTURES_DIR, 'data'), { recursive: true });
 
   // Agent files
-  writeFileSync(join(FIXTURES_DIR, 'agents', 'clarity', 'brief.md'), `# Brief Agent — Problem Extraction
+  writeFileSync(join(FIXTURES_DIR, 'agents', 'planning', 'brief.md'), `# Brief Agent — Problem Extraction
 
 ## Identity
 - **Role**: Problem Extraction Specialist
-- **Category**: CLARITY
+- **Category**: PLANNING
 
 ## Mission
 Extract requirements.

@@ -28,3 +28,12 @@ export {
   getReadScope,
   buildIsolationEnv,
 } from './isolation.js';
+
+export {
+  buildAgentPrompt,
+  AGENT_FILE_MAP,
+} from './prompt-builder.js';
+
+export {
+  parseAgentOutput,
+} from './handoff-parser.js';

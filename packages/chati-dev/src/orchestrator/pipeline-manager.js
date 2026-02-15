@@ -8,7 +8,7 @@ import { AGENT_PIPELINE, getNextAgent } from './agent-selector.js';
 /**
  * Pipeline phases in order.
  */
-export const PIPELINE_PHASES = ['clarity', 'build', 'deploy'];
+export const PIPELINE_PHASES = ['planning', 'build', 'deploy'];
 
 /**
  * Agent status values.
@@ -35,7 +35,7 @@ const QA_IMPLEMENTATION_THRESHOLD = 90;
  * @returns {object} Pipeline state
  */
 export function initPipeline(options = {}) {
-  const { isGreenfield = true, mode = 'clarity' } = options;
+  const { isGreenfield = true, mode = 'planning' } = options;
 
   const agents = {};
   for (const agentDef of AGENT_PIPELINE) {
@@ -257,7 +257,7 @@ export function checkPhaseTransition(pipelineState) {
   const { phase, agents } = pipelineState;
 
   // Check based on current phase
-  if (phase === 'clarity') {
+  if (phase === 'planning') {
     // Need QA-Planning to be completed with score >= 95
     const qaPlanning = agents['qa-planning'];
     if (!qaPlanning) {

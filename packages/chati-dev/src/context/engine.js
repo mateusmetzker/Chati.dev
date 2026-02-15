@@ -23,7 +23,7 @@ const LAYER_TIMEOUT_MS = 100;
  * @param {object} input
  * @param {string} input.domainsDir - Path to chati.dev/domains/
  * @param {number} input.remainingPercent - Context window remaining (0-100)
- * @param {string} [input.mode] - Current mode (clarity, build, deploy)
+ * @param {string} [input.mode] - Current mode (planning, build, deploy)
  * @param {string} [input.agent] - Active agent name
  * @param {string} [input.workflow] - Active workflow name
  * @param {string} [input.pipelinePosition] - Current pipeline step
@@ -43,7 +43,7 @@ export function runPrism(input) {
   // 2. Build context for layer processors
   const ctx = {
     domainsDir: input.domainsDir,
-    mode: input.mode || 'clarity',
+    mode: input.mode || 'planning',
     bracket: bracket.bracket,
     agent: input.agent || null,
     workflow: input.workflow || null,

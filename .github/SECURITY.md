@@ -54,7 +54,8 @@ If you discover a security vulnerability in Chati.dev, please report it responsi
 
 | Area | Examples |
 |------|---------|
-| **Agent System** | Prompt injection that bypasses Session Lock or Constitution enforcement |
+| **Agent System** | Prompt injection that bypasses Session Lock, Constitution enforcement, or write scope isolation |
+| **Terminal Spawning** | Write scope escape, model bypass, or unauthorized parallel execution |
 | **CLI Installer** | Path traversal, command injection, arbitrary file write |
 | **Session State** | Credential exposure in session.yaml or CLAUDE.md |
 | **System Files** | Injection via templates, workflows, or intelligence files |
@@ -81,12 +82,24 @@ If you discover a security vulnerability in Chati.dev, please report it responsi
 4. **Constitution Enforcement**: Security violations halt the pipeline (Article IV)
 5. **Session Lock**: Active sessions cannot be bypassed to access raw AI mode (Article XV)
 
+### Multi-Terminal Security
+
+Autonomous agents run in separate `claude -p` terminals. Security measures:
+
+| Control | Implementation |
+|---------|---------------|
+| **Write Scope Isolation** | Each agent's write scope is enforced via prompt instructions. Parallel agents have disjoint write paths validated before spawning. |
+| **Model Enforcement** | The `--model` flag is set by construction — agents cannot switch to a different model at runtime. |
+| **`--dangerously-skip-permissions`** | Used for spawned terminals because `claude -p` cannot prompt users interactively. Mitigated by: write scope enforcement in prompt, Constitution guard hook, mode governance hook. |
+| **Prompt Integrity** | Prompts are piped via stdin (not CLI args) to prevent shell injection. Context is self-contained — no external file references at runtime. |
+| **Parallel Validation** | `validateWriteScopes()` blocks parallel groups with overlapping write paths before spawning. |
+
 ### Security-Relevant Constitution Articles
 
 | Article | Security Control |
 |---------|-----------------|
 | **IV** | No destructive operations without confirmation. No secrets in system files. SAST mandatory. |
-| **XI** | Mode governance restricts write scope. Clarity mode cannot modify project code. |
+| **XI** | Mode governance restricts write scope. Planning mode cannot modify project code. |
 | **XIII** | Memory Layer never auto-modifies user files. Proposals require explicit approval. |
 | **XV** | Session Lock prevents accidental system escape. Exit requires explicit intent. |
 | **XVI** | Model governance — no downgrade from assigned model. Cost tracking logged in session. |

@@ -146,14 +146,14 @@ function checkAgents(frameworkDir) {
   const orchestratorDir = join(frameworkDir, 'orchestrator');
 
   const expectedAgents = {
-    'clarity/greenfield-wu.md': 'greenfield-wu',
-    'clarity/brownfield-wu.md': 'brownfield-wu',
-    'clarity/brief.md': 'brief',
-    'clarity/detail.md': 'detail',
-    'clarity/architect.md': 'architect',
-    'clarity/ux.md': 'ux',
-    'clarity/phases.md': 'phases',
-    'clarity/tasks.md': 'tasks',
+    'planning/greenfield-wu.md': 'greenfield-wu',
+    'planning/brownfield-wu.md': 'brownfield-wu',
+    'planning/brief.md': 'brief',
+    'planning/detail.md': 'detail',
+    'planning/architect.md': 'architect',
+    'planning/ux.md': 'ux',
+    'planning/phases.md': 'phases',
+    'planning/tasks.md': 'tasks',
     'quality/qa-planning.md': 'qa-planning',
     'quality/qa-implementation.md': 'qa-implementation',
     'build/dev.md': 'dev',

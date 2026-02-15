@@ -21,7 +21,7 @@ function setupFixtures() {
 id: brief-extract-requirements
 agent: brief
 trigger: orchestrator
-phase: clarity
+phase: planning
 requires_input: true
 parallelizable: false
 outputs: [requirements-raw.yaml]
@@ -42,7 +42,7 @@ Extract and structure requirements from user's initial brain dump.
 id: brief-validate-completeness
 agent: brief
 trigger: brief-extract-requirements
-phase: clarity
+phase: planning
 requires_input: false
 outputs: [brief-validated.yaml]
 handoff_to: detail
@@ -75,7 +75,7 @@ Write the code.
 id: orchestrator-route
 agent: orchestrator
 trigger: user
-phase: clarity
+phase: planning
 outputs: [routing-decision]
 criteria:
   - Correct agent selected
@@ -93,7 +93,7 @@ Just plain markdown text.
 
   // Task with missing required fields
   writeFileSync(join(FIXTURES_DIR, 'bad-missing-fields.md'), `---
-phase: clarity
+phase: planning
 ---
 # Missing ID and Agent
 `);
@@ -102,7 +102,7 @@ phase: clarity
   writeFileSync(join(FIXTURES_DIR, 'warn-unknown-agent.md'), `---
 id: warn-unknown-agent
 agent: nonexistent-agent
-phase: clarity
+phase: planning
 criteria:
   - Some criterion
 ---
@@ -114,7 +114,7 @@ criteria:
 id: broken-handoff
 agent: brief
 trigger: orchestrator
-phase: clarity
+phase: planning
 handoff_to: totally-nonexistent-task-999
 criteria:
   - Something
@@ -247,7 +247,7 @@ agent: dev
 
     it('counts tasks by phase', () => {
       const stats = getTaskStats(FIXTURES_DIR);
-      assert.ok(stats.byPhase.clarity > 0);
+      assert.ok(stats.byPhase.planning > 0);
       assert.ok(stats.byPhase.build > 0);
     });
 

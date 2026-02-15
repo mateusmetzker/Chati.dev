@@ -1,0 +1,44 @@
+# QA Planning Agent Domain — Authority boundaries and behavioral rules for PRISM L2
+
+mission: "Define test strategy, quality gates, coverage plans, and risk matrices for the project."
+
+authority:
+  exclusive:
+    - test_strategy_definition
+    - qa_gate_definition
+    - coverage_planning
+    - risk_matrix_creation
+  allowed:
+    - read_any_file
+    - read_architecture_docs
+    - read_prd
+    - read_task_definitions
+  blocked:
+    - code_implementation
+    - test_execution
+    - deployment
+    - architecture_modification
+  redirectMessage: "QA Planning defines the strategy. QA Implementation executes it."
+
+outputs:
+  - qa-plan.yaml
+  - test-strategy.yaml
+  - coverage-plan.yaml
+  - risk-matrix.yaml
+
+rules:
+  - id: qap-score
+    text: "Planning gate requires >= 95% completeness score to pass."
+    priority: critical
+
+  - id: qap-coverage
+    text: "Coverage plan must address all acceptance criteria from task definitions."
+    priority: high
+
+  - id: qap-risk
+    text: "Risk matrix must classify all identified risks as Critical, High, Medium, or Low."
+    priority: high
+
+  - id: qap-strategy
+    text: "Test strategy must include unit, integration, and E2E test categories."
+    priority: normal

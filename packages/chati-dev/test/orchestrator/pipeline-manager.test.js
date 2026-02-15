@@ -20,15 +20,15 @@ describe('pipeline-manager', () => {
   describe('PIPELINE_PHASES', () => {
     it('should have 3 phases in order', () => {
       assert.equal(PIPELINE_PHASES.length, 3);
-      assert.deepEqual(PIPELINE_PHASES, ['clarity', 'build', 'deploy']);
+      assert.deepEqual(PIPELINE_PHASES, ['planning', 'build', 'deploy']);
     });
   });
 
   describe('initPipeline', () => {
     it('should initialize greenfield pipeline', () => {
-      const state = initPipeline({ isGreenfield: true, mode: 'clarity' });
+      const state = initPipeline({ isGreenfield: true, mode: 'planning' });
 
-      assert.equal(state.phase, 'clarity');
+      assert.equal(state.phase, 'planning');
       assert.equal(state.isGreenfield, true);
       assert.ok(state.startedAt);
       assert.equal(state.completedAt, null);
@@ -38,7 +38,7 @@ describe('pipeline-manager', () => {
     });
 
     it('should initialize brownfield pipeline', () => {
-      const state = initPipeline({ isGreenfield: false, mode: 'clarity' });
+      const state = initPipeline({ isGreenfield: false, mode: 'planning' });
 
       assert.equal(state.isGreenfield, false);
       assert.ok(state.agents['brownfield-wu']);
@@ -61,9 +61,9 @@ describe('pipeline-manager', () => {
       }
     });
 
-    it('should default to clarity mode', () => {
+    it('should default to planning mode', () => {
       const state = initPipeline({});
-      assert.equal(state.phase, 'clarity');
+      assert.equal(state.phase, 'planning');
     });
   });
 
@@ -157,7 +157,7 @@ describe('pipeline-manager', () => {
 
       const result = advancePipeline(state, 'qa-planning', { score: 85 });
 
-      assert.equal(result.state.phase, 'clarity');
+      assert.equal(result.state.phase, 'planning');
       assert.equal(result.nextAction, 'wait');
     });
 
@@ -182,7 +182,7 @@ describe('pipeline-manager', () => {
 
       assert.ok(result.state.modeTransitions.length > 0);
       const transition = result.state.modeTransitions[0];
-      assert.equal(transition.from, 'clarity');
+      assert.equal(transition.from, 'planning');
       assert.equal(transition.to, 'build');
       assert.equal(transition.trigger, 'autonomous');
     });

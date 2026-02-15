@@ -1,10 +1,8 @@
 import * as p from '@clack/prompts';
 import { t, SUPPORTED_LANGUAGES, loadLanguage } from './i18n.js';
-import { getIDEChoices } from '../config/ide-configs.js';
-import { getMCPChoices, getMCPWarnings } from '../config/mcp-configs.js';
 import { detectProjectType } from '../utils/detector.js';
 import { showSummary, showChecklist } from './feedback.js';
-import { brand, dim, success, yellow } from '../utils/colors.js';
+import { brand, dim, success } from '../utils/colors.js';
 
 /**
  * Step 1: Language Selection (always in English)
@@ -60,77 +58,16 @@ export async function stepProjectType(targetDir) {
 }
 
 /**
- * Step 3: IDE Selection (Multi-select)
- */
-export async function stepIDEs() {
-  const ideChoices = getIDEChoices();
-
-  const selectedIDEs = await p.multiselect({
-    message: t('installer.select_ides'),
-    options: ideChoices.map(ide => ({
-      value: ide.value,
-      label: `${ide.label}  ${dim('--')} ${dim(ide.hint)}`,
-    })),
-    initialValues: ['claude-code'],
-    required: true,
-  });
-
-  if (p.isCancel(selectedIDEs)) {
-    p.cancel('Installation cancelled.');
-    process.exit(0);
-  }
-
-  return selectedIDEs;
-}
-
-/**
- * Step 4: MCP Selection (Multi-select)
- */
-export async function stepMCPs(projectType) {
-  const mcpChoices = getMCPChoices();
-
-  const selectedMCPs = await p.multiselect({
-    message: t('installer.select_mcps'),
-    options: mcpChoices.map(mcp => ({
-      value: mcp.value,
-      label: `${mcp.label}  ${dim('--')} ${dim(mcp.hint)}`,
-    })),
-    initialValues: mcpChoices.filter(m => m.initialValue).map(m => m.value),
-    required: false,
-  });
-
-  if (p.isCancel(selectedMCPs)) {
-    p.cancel('Installation cancelled.');
-    process.exit(0);
-  }
-
-  // Check for MCP warnings
-  const warnings = getMCPWarnings(projectType, selectedMCPs);
-  for (const warn of warnings) {
-    if (warn.level === 'critical') {
-      const continueAnyway = await p.confirm({
-        message: `${yellow('Warning:')} ${warn.message}\nContinue anyway?`,
-        initialValue: false,
-      });
-
-      if (p.isCancel(continueAnyway) || !continueAnyway) {
-        return stepMCPs(projectType); // Re-prompt
-      }
-    }
-  }
-
-  return selectedMCPs;
-}
-
-/**
- * Step 5: Confirmation
+ * Step 3: Confirmation
  */
 export async function stepConfirmation(config) {
-  const { projectName, projectType, language, selectedIDEs, selectedMCPs } = config;
+  const { projectName, projectType, language, selectedMCPs } = config;
 
   const langName = SUPPORTED_LANGUAGES.find(l => l.value === language)?.label || language;
-  const ideNames = selectedIDEs.join(', ');
-  const mcpNames = selectedMCPs.length > 0 ? selectedMCPs.join(', ') : 'None';
+  const ideNames = 'Claude Code (auto-configured)';
+  const mcpNames = selectedMCPs.length > 0
+    ? `${selectedMCPs.join(', ')} (auto-installed)`
+    : 'None';
 
   console.log();
   console.log(brand(t('installer.confirmation_title') + ':'));

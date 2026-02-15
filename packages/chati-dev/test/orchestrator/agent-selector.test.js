@@ -28,9 +28,9 @@ describe('agent-selector', () => {
       assert.ok(wuAgents.some((a) => a.name === 'brownfield-wu'));
     });
 
-    it('should have parallel agents in clarity-parallel group', () => {
+    it('should have parallel agents in planning-parallel group', () => {
       const parallelAgents = AGENT_PIPELINE.filter(
-        (a) => a.group === 'clarity-parallel'
+        (a) => a.group === 'planning-parallel'
       );
       assert.equal(parallelAgents.length, 3);
       assert.ok(parallelAgents.every((a) => a.parallel === true));
@@ -41,7 +41,7 @@ describe('agent-selector', () => {
     it('should select greenfield-wu for new project planning', () => {
       const result = selectAgent({
         intent: INTENT_TYPES.PLANNING,
-        mode: 'clarity',
+        mode: 'planning',
         isGreenfield: true,
         completedAgents: [],
       });
@@ -53,7 +53,7 @@ describe('agent-selector', () => {
     it('should select brownfield-wu for existing project', () => {
       const result = selectAgent({
         intent: INTENT_TYPES.PLANNING,
-        mode: 'clarity',
+        mode: 'planning',
         isGreenfield: false,
         completedAgents: [],
       });
@@ -85,7 +85,7 @@ describe('agent-selector', () => {
     it('should continue from current agent on resume', () => {
       const result = selectAgent({
         intent: INTENT_TYPES.RESUME,
-        mode: 'clarity',
+        mode: 'planning',
         currentAgent: 'greenfield-wu',
         completedAgents: ['greenfield-wu'],
       });
@@ -97,7 +97,7 @@ describe('agent-selector', () => {
     it('should identify parallel group for parallel agents', () => {
       const result = selectAgent({
         intent: INTENT_TYPES.PLANNING,
-        mode: 'clarity',
+        mode: 'planning',
         currentAgent: 'brief',
         completedAgents: ['greenfield-wu', 'brief'],
       });
@@ -108,7 +108,7 @@ describe('agent-selector', () => {
     });
 
     it('should handle no incomplete agents', () => {
-      const allClarityAgents = [
+      const allPlanningAgents = [
         'greenfield-wu',
         'brief',
         'detail',
@@ -121,8 +121,8 @@ describe('agent-selector', () => {
 
       const result = selectAgent({
         intent: INTENT_TYPES.PLANNING,
-        mode: 'clarity',
-        completedAgents: allClarityAgents,
+        mode: 'planning',
+        completedAgents: allPlanningAgents,
       });
 
       assert.equal(result.agent, null);
@@ -191,10 +191,10 @@ describe('agent-selector', () => {
   });
 
   describe('isAgentAllowedInMode', () => {
-    it('should allow clarity agents in clarity mode', () => {
-      assert.equal(isAgentAllowedInMode('greenfield-wu', 'clarity'), true);
-      assert.equal(isAgentAllowedInMode('brief', 'clarity'), true);
-      assert.equal(isAgentAllowedInMode('qa-planning', 'clarity'), true);
+    it('should allow planning agents in planning mode', () => {
+      assert.equal(isAgentAllowedInMode('greenfield-wu', 'planning'), true);
+      assert.equal(isAgentAllowedInMode('brief', 'planning'), true);
+      assert.equal(isAgentAllowedInMode('qa-planning', 'planning'), true);
     });
 
     it('should allow build agents in build mode', () => {
@@ -206,21 +206,21 @@ describe('agent-selector', () => {
       assert.equal(isAgentAllowedInMode('devops', 'deploy'), true);
     });
 
-    it('should not allow clarity agents in build mode', () => {
+    it('should not allow planning agents in build mode', () => {
       assert.equal(isAgentAllowedInMode('brief', 'build'), false);
     });
 
-    it('should not allow build agents in clarity mode', () => {
-      assert.equal(isAgentAllowedInMode('dev', 'clarity'), false);
+    it('should not allow build agents in planning mode', () => {
+      assert.equal(isAgentAllowedInMode('dev', 'planning'), false);
     });
 
     it('should return false for unknown agent', () => {
-      assert.equal(isAgentAllowedInMode('unknown-agent', 'clarity'), false);
+      assert.equal(isAgentAllowedInMode('unknown-agent', 'planning'), false);
     });
   });
 
   describe('getParallelGroups', () => {
-    it('should identify clarity-parallel group', () => {
+    it('should identify planning-parallel group', () => {
       const groups = getParallelGroups(['greenfield-wu', 'brief']);
       assert.equal(groups.length, 1);
       assert.equal(groups[0].length, 3);
@@ -260,7 +260,7 @@ describe('agent-selector', () => {
       const def = getAgentDefinition('brief');
       assert.ok(def);
       assert.equal(def.name, 'brief');
-      assert.equal(def.phase, 'clarity');
+      assert.equal(def.phase, 'planning');
     });
 
     it('should return null for unknown agent', () => {
@@ -270,10 +270,10 @@ describe('agent-selector', () => {
   });
 
   describe('getPhaseAgents', () => {
-    it('should return clarity agents', () => {
-      const agents = getPhaseAgents('clarity');
+    it('should return planning agents', () => {
+      const agents = getPhaseAgents('planning');
       assert.ok(agents.length > 0);
-      assert.ok(agents.every((a) => a.phase === 'clarity'));
+      assert.ok(agents.every((a) => a.phase === 'planning'));
     });
 
     it('should return build agents', () => {

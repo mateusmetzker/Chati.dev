@@ -1,7 +1,7 @@
 /**
  * @fileoverview G1 — Planning Complete Gate
  *
- * Pre-BUILD gate that validates the CLARITY phase is fully completed.
+ * Pre-BUILD gate that validates the PLANNING phase is fully completed.
  * Checks that all required artifacts exist and QA-Planning has approved.
  */
 
@@ -31,7 +31,7 @@ export class PlanningCompleteGate extends GateBase {
   }
 
   /**
-   * Collect evidence by checking filesystem for CLARITY artifacts.
+   * Collect evidence by checking filesystem for PLANNING artifacts.
    *
    * @param {string} projectDir
    * @returns {object} Evidence about artifact presence, session state, and handoff
@@ -99,7 +99,7 @@ export class PlanningCompleteGate extends GateBase {
     const allCriteria = [
       ...REQUIRED_ARTIFACTS.map(a => `${a.label} exists`),
       'QA-Planning handoff with passing score',
-      'Session shows clarity completed',
+      'Session shows planning completed',
     ];
 
     const criteriaResults = [];
@@ -130,16 +130,16 @@ export class PlanningCompleteGate extends GateBase {
 
     // Check session state
     if (evidence.sessionState) {
-      const clarityAgents = ['brief', 'detail', 'architect', 'ux', 'phases', 'tasks', 'qa-planning'];
-      const completed = clarityAgents.filter(a =>
+      const planningAgents = ['brief', 'detail', 'architect', 'ux', 'phases', 'tasks', 'qa-planning'];
+      const completed = planningAgents.filter(a =>
         evidence.sessionState.completedAgents.includes(a)
       );
 
-      if (completed.length === clarityAgents.length) {
-        criteriaResults.push('Session shows clarity completed');
+      if (completed.length === planningAgents.length) {
+        criteriaResults.push('Session shows planning completed');
       } else {
-        const missing = clarityAgents.filter(a => !completed.includes(a));
-        warnings.push(`Incomplete clarity agents: ${missing.join(', ')}`);
+        const missing = planningAgents.filter(a => !completed.includes(a));
+        warnings.push(`Incomplete planning agents: ${missing.join(', ')}`);
       }
     }
 

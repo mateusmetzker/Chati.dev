@@ -32,7 +32,7 @@ mkdirSync(DEST, { recursive: true });
 
 const dirs = [
   'orchestrator',
-  'agents/clarity', 'agents/quality', 'agents/build', 'agents/deploy',
+  'agents/planning', 'agents/quality', 'agents/build', 'agents/deploy',
   'templates', 'workflows', 'quality-gates',
   'schemas', 'frameworks', 'intelligence', 'patterns',
   'hooks', 'domains',

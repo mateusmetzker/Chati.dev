@@ -186,7 +186,7 @@ function sanitizeSessionState(state) {
   if (!state) return null;
 
   return {
-    mode: state.mode || 'clarity',
+    mode: state.mode || 'planning',
     current_agent: state.current_agent || null,
     pipeline_position: state.pipeline_position || null,
     completed_agents: state.completed_agents || [],

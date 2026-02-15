@@ -35,7 +35,7 @@ export function buildProgressReport(pipelineState, options = {}) {
 
 /**
  * Format progress as a compact one-line status.
- * Example: "[CLARITY 3/8] brief ✅ → detail 🔄 (score: 92%)"
+ * Example: "[PLANNING 3/8] brief ✅ → detail 🔄 (score: 92%)"
  * @param {object} pipelineState
  * @returns {string}
  */
@@ -75,10 +75,10 @@ export function formatDetailedReport(pipelineState) {
   lines.push(`Stage: ${stage}`);
   lines.push('');
 
-  // CLARITY agents
-  lines.push('CLARITY:');
-  const clarityAgents = getStageAgents('CLARITY');
-  clarityAgents.forEach(agent => {
+  // PLANNING agents
+  lines.push('PLANNING:');
+  const planningAgents = getStageAgents('PLANNING');
+  planningAgents.forEach(agent => {
     const status = agentStatus[agent] || 'pending';
     const icon = getStatusIcon(status);
     const isActive = agent === pipelineState.current_agent;
@@ -146,7 +146,7 @@ export function calculateCompletion(pipelineState) {
  */
 function getStageAgents(stage) {
   const stages = {
-    CLARITY: [
+    PLANNING: [
       'greenfield-wu',
       'brownfield-wu',
       'brief',
@@ -170,7 +170,7 @@ function getStageAgents(stage) {
  */
 function getAllAgents() {
   return [
-    ...getStageAgents('CLARITY'),
+    ...getStageAgents('PLANNING'),
     ...getStageAgents('BUILD'),
     ...getStageAgents('DEPLOY'),
   ];
@@ -249,7 +249,7 @@ function countTotalAgents(_pipelineState) {
 /**
  * Get progress summary by stage.
  * @param {object} pipelineState
- * @returns {{ clarity: number, build: number, deploy: number }}
+ * @returns {{ planning: number, build: number, deploy: number }}
  */
 export function getStageProgress(pipelineState) {
   const agentStatus = pipelineState.agent_status || {};
@@ -261,7 +261,7 @@ export function getStageProgress(pipelineState) {
   };
 
   return {
-    clarity: getProgress('CLARITY'),
+    planning: getProgress('PLANNING'),
     build: getProgress('BUILD'),
     deploy: getProgress('DEPLOY'),
   };

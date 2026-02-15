@@ -21,7 +21,7 @@ const VALID_AGENT_CONTENT = `# Brief Agent — Problem Extraction
 
 - **Role**: Problem Extraction Specialist
 - **Pipeline Position**: 2nd agent (after WU)
-- **Category**: CLARITY
+- **Category**: PLANNING
 - **Question Answered**: WHAT is the problem?
 
 ---
@@ -122,28 +122,28 @@ entities:
       path: chati.dev/orchestrator/chati.md
       type: agent
     greenfield-wu:
-      path: chati.dev/agents/clarity/greenfield-wu.md
+      path: chati.dev/agents/planning/greenfield-wu.md
       type: agent
     brownfield-wu:
-      path: chati.dev/agents/clarity/brownfield-wu.md
+      path: chati.dev/agents/planning/brownfield-wu.md
       type: agent
     brief:
-      path: chati.dev/agents/clarity/brief.md
+      path: chati.dev/agents/planning/brief.md
       type: agent
     detail:
-      path: chati.dev/agents/clarity/detail.md
+      path: chati.dev/agents/planning/detail.md
       type: agent
     architect:
-      path: chati.dev/agents/clarity/architect.md
+      path: chati.dev/agents/planning/architect.md
       type: agent
     ux:
-      path: chati.dev/agents/clarity/ux.md
+      path: chati.dev/agents/planning/ux.md
       type: agent
     phases:
-      path: chati.dev/agents/clarity/phases.md
+      path: chati.dev/agents/planning/phases.md
       type: agent
     tasks:
-      path: chati.dev/agents/clarity/tasks.md
+      path: chati.dev/agents/planning/tasks.md
       type: agent
     qa-planning:
       path: chati.dev/agents/quality/qa-planning.md
@@ -212,7 +212,7 @@ describe('validate-agents', () => {
 
   describe('validateAgent', () => {
     it('validates a well-formed agent file', () => {
-      const result = validateAgent(FIXTURES_DIR, join('agents', 'clarity', 'brief.md'));
+      const result = validateAgent(FIXTURES_DIR, join('agents', 'planning', 'brief.md'));
       assert.ok(result.valid);
       assert.equal(result.errors.length, 0);
       assert.ok(result.completeness);
@@ -220,15 +220,15 @@ describe('validate-agents', () => {
     });
 
     it('reports missing file as error', () => {
-      const result = validateAgent(FIXTURES_DIR, join('agents', 'clarity', 'nonexistent.md'));
+      const result = validateAgent(FIXTURES_DIR, join('agents', 'planning', 'nonexistent.md'));
       assert.equal(result.valid, false);
       assert.ok(result.errors.length > 0);
     });
 
     it('extracts identity from agent content', () => {
-      const result = validateAgent(FIXTURES_DIR, join('agents', 'clarity', 'brief.md'));
+      const result = validateAgent(FIXTURES_DIR, join('agents', 'planning', 'brief.md'));
       assert.equal(result.identity.role, 'Problem Extraction Specialist');
-      assert.equal(result.identity.category, 'CLARITY');
+      assert.equal(result.identity.category, 'PLANNING');
     });
   });
 
@@ -244,10 +244,10 @@ describe('validate-agents', () => {
     it('reports missing agents', () => {
       // Create a partial framework
       const partialDir = join(FIXTURES_DIR, '_partial');
-      mkdirSync(join(partialDir, 'agents', 'clarity'), { recursive: true });
+      mkdirSync(join(partialDir, 'agents', 'planning'), { recursive: true });
       mkdirSync(join(partialDir, 'orchestrator'), { recursive: true });
 
-      writeFileSync(join(partialDir, 'agents', 'clarity', 'brief.md'), VALID_AGENT_CONTENT);
+      writeFileSync(join(partialDir, 'agents', 'planning', 'brief.md'), VALID_AGENT_CONTENT);
       writeFileSync(join(partialDir, 'orchestrator', 'chati.md'), '# Orchestrator\n## On Activation\nRoute.');
 
       const report = validateAllAgents(partialDir);

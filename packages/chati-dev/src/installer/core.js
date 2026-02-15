@@ -34,7 +34,7 @@ export async function installFramework(config) {
   // Copy framework structure
   const frameworkDirs = [
     'orchestrator',
-    'agents/clarity', 'agents/quality', 'agents/build', 'agents/deploy',
+    'agents/planning', 'agents/quality', 'agents/build', 'agents/deploy',
     'templates', 'workflows', 'quality-gates',
     'schemas', 'frameworks', 'intelligence', 'patterns',
     'hooks', 'domains', 'domains/agents', 'domains/workflows',
@@ -120,15 +120,15 @@ function copyFrameworkFiles(destDir) {
   const filesToCopy = [
     'constitution.md',
     'orchestrator/chati.md',
-    // CLARITY agents
-    'agents/clarity/greenfield-wu.md',
-    'agents/clarity/brownfield-wu.md',
-    'agents/clarity/brief.md',
-    'agents/clarity/detail.md',
-    'agents/clarity/architect.md',
-    'agents/clarity/ux.md',
-    'agents/clarity/phases.md',
-    'agents/clarity/tasks.md',
+    // PLANNING agents
+    'agents/planning/greenfield-wu.md',
+    'agents/planning/brownfield-wu.md',
+    'agents/planning/brief.md',
+    'agents/planning/detail.md',
+    'agents/planning/architect.md',
+    'agents/planning/ux.md',
+    'agents/planning/phases.md',
+    'agents/planning/tasks.md',
     // Quality agents
     'agents/quality/qa-planning.md',
     'agents/quality/qa-implementation.md',
@@ -297,7 +297,7 @@ Read it to understand routing, session management, and agent activation.
 Governance rules are in \`chati.dev/constitution.md\` (10 Articles).
 
 ## Agents
-- CLARITY: chati.dev/agents/clarity/ (8 agents)
+- PLANNING: chati.dev/agents/planning/ (8 agents)
 - Quality: chati.dev/agents/quality/ (2 agents)
 - BUILD: chati.dev/agents/build/ (1 agent)
 - DEPLOY: chati.dev/agents/deploy/ (1 agent)

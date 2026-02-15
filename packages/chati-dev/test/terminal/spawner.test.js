@@ -41,7 +41,7 @@ describe('spawner', () => {
     });
 
     it('should serialize contextPayload into CHATI_CONTEXT', () => {
-      const payload = { phase: 'clarity', data: { key: 'value' } };
+      const payload = { phase: 'planning', data: { key: 'value' } };
       const result = buildSpawnCommand({
         agent: 'brief',
         taskId: 'extract',
@@ -83,11 +83,48 @@ describe('spawner', () => {
       assert.throws(() => buildSpawnCommand({ agent: 'dev' }), /config\.taskId is required/);
     });
 
-    it('should include prompt with agent and taskId in args', () => {
+    it('should NOT include prompt in args (prompt goes via stdin)', () => {
       const result = buildSpawnCommand({ agent: 'ux', taskId: 'wireframe' });
-      const promptArg = result.args[result.args.length - 1];
-      assert.ok(promptArg.includes('ux'));
-      assert.ok(promptArg.includes('wireframe'));
+      // args should only be flags, not a prompt string
+      for (const arg of result.args) {
+        assert.ok(arg.startsWith('--') || ['claude', 'haiku', 'sonnet', 'opus'].includes(arg),
+          `Unexpected non-flag arg: ${arg}`);
+      }
+    });
+
+    it('should return prompt in result when provided', () => {
+      const result = buildSpawnCommand({
+        agent: 'detail',
+        taskId: 'expand-prd',
+        prompt: 'Full PRISM context here...',
+      });
+      assert.equal(result.prompt, 'Full PRISM context here...');
+    });
+
+    it('should return null prompt when not provided', () => {
+      const result = buildSpawnCommand({ agent: 'detail', taskId: 'expand-prd' });
+      assert.equal(result.prompt, null);
+    });
+
+    it('should include --model flag when model is specified', () => {
+      const result = buildSpawnCommand({
+        agent: 'detail',
+        taskId: 'expand-prd',
+        model: 'opus',
+      });
+      const modelIdx = result.args.indexOf('--model');
+      assert.ok(modelIdx >= 0, '--model flag should be present');
+      assert.equal(result.args[modelIdx + 1], 'opus');
+    });
+
+    it('should NOT include --model flag when model is not specified', () => {
+      const result = buildSpawnCommand({ agent: 'brief', taskId: 'extract' });
+      assert.ok(!result.args.includes('--model'));
+    });
+
+    it('should set CHATI_SPAWNED env var', () => {
+      const result = buildSpawnCommand({ agent: 'dev', taskId: 'implement' });
+      assert.equal(result.env.CHATI_SPAWNED, 'true');
     });
   });
 

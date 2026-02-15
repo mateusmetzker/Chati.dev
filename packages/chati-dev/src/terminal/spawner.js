@@ -40,8 +40,10 @@ export function _resetCounter() {
 
 /**
  * @typedef {object} SpawnConfig
- * @property {string} agent       - Agent name (e.g. "architect")
- * @property {string} taskId      - Task identifier
+ * @property {string} agent           - Agent name (e.g. "architect")
+ * @property {string} taskId          - Task identifier
+ * @property {string} [model]         - LLM model (haiku/sonnet/opus)
+ * @property {string} [prompt]        - Full prompt string (from prompt-builder, piped via stdin)
  * @property {object} [contextPayload] - Context to inject via env var
  * @property {string[]} [writeScope]   - Override write scope
  * @property {string} [workingDir]     - Working directory for the process
@@ -54,6 +56,7 @@ export function _resetCounter() {
  * @property {object|null} process - child_process.ChildProcess (null when dry)
  * @property {string} agent      - Agent name
  * @property {string} taskId     - Task identifier
+ * @property {string} model      - Model used for this terminal
  * @property {string} startedAt  - ISO timestamp
  * @property {string} status     - "running" | "exited" | "killed"
  * @property {number|null} exitCode - Process exit code (null while running)
@@ -68,7 +71,7 @@ export function _resetCounter() {
  * perform any I/O and is therefore fully testable in isolation.
  *
  * @param {SpawnConfig} config
- * @returns {{ command: string, args: string[], env: Record<string, string> }}
+ * @returns {{ command: string, args: string[], env: Record<string, string>, terminalId: string, prompt: string|null }}
  */
 export function buildSpawnCommand(config) {
   if (!config || typeof config !== 'object') {
@@ -89,6 +92,7 @@ export function buildSpawnCommand(config) {
     CHATI_TERMINAL_ID: terminalId,
     CHATI_AGENT: config.agent,
     CHATI_TASK_ID: config.taskId,
+    CHATI_SPAWNED: 'true',
   };
 
   if (config.contextPayload) {
@@ -99,19 +103,18 @@ export function buildSpawnCommand(config) {
     }
   }
 
-  // Build the prompt that will be sent to claude CLI
-  const prompt = `Execute task ${config.taskId} as agent ${config.agent}. ` +
-    `Write scope: ${isolationEnv.CHATI_WRITE_SCOPE || 'none'}. ` +
-    `Terminal ID: ${terminalId}.`;
-
+  // Build CLI args — prompt is piped via stdin, NOT as a CLI argument
   const command = 'claude';
-  const args = [
-    '--print',
-    '--dangerously-skip-permissions',
-    prompt,
-  ];
+  const args = ['--print', '--dangerously-skip-permissions'];
 
-  return { command, args, env, terminalId };
+  if (config.model) {
+    args.push('--model', config.model);
+  }
+
+  // Prompt is returned separately for stdin piping (avoids ARG_MAX limits)
+  const prompt = config.prompt || null;
+
+  return { command, args, env, terminalId, prompt };
 }
 
 /**
@@ -121,7 +124,7 @@ export function buildSpawnCommand(config) {
  * @returns {TerminalHandle}
  */
 export function spawnTerminal(config) {
-  const { command, args, env, terminalId } = buildSpawnCommand(config);
+  const { command, args, env, terminalId, prompt } = buildSpawnCommand(config);
 
   const cwd = config.workingDir || process.cwd();
   const timeout = config.timeout || 300_000; // default 5 minutes
@@ -129,8 +132,14 @@ export function spawnTerminal(config) {
   const child = spawn(command, args, {
     cwd,
     env: { ...process.env, ...env },
-    stdio: ['ignore', 'pipe', 'pipe'],
+    stdio: ['pipe', 'pipe', 'pipe'],
   });
+
+  // Pipe prompt via stdin (avoids shell argument length limits)
+  if (prompt) {
+    child.stdin.write(prompt);
+  }
+  child.stdin.end();
 
   /** @type {TerminalHandle} */
   const handle = {
@@ -138,6 +147,7 @@ export function spawnTerminal(config) {
     process: child,
     agent: config.agent,
     taskId: config.taskId,
+    model: config.model || 'sonnet',
     startedAt: new Date().toISOString(),
     status: 'running',
     exitCode: null,
@@ -250,11 +260,11 @@ export function killTerminal(handle) {
  * Return the current status snapshot of a terminal.
  *
  * @param {TerminalHandle} handle
- * @returns {{ id: string, agent: string, status: string, elapsed: number, exitCode: number|null }}
+ * @returns {{ id: string, agent: string, model: string, status: string, elapsed: number, exitCode: number|null }}
  */
 export function getTerminalStatus(handle) {
   if (!handle) {
-    return { id: 'unknown', agent: 'unknown', status: 'unknown', elapsed: 0, exitCode: null };
+    return { id: 'unknown', agent: 'unknown', model: 'unknown', status: 'unknown', elapsed: 0, exitCode: null };
   }
 
   const elapsed = Date.now() - new Date(handle.startedAt).getTime();
@@ -262,6 +272,7 @@ export function getTerminalStatus(handle) {
   return {
     id: handle.id,
     agent: handle.agent,
+    model: handle.model || 'unknown',
     status: handle.status,
     elapsed,
     exitCode: handle.exitCode,

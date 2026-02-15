@@ -36,7 +36,7 @@ rules:
     text: "Code must be in English"
     priority: high
 modes:
-  clarity:
+  planning:
     writeScope: "chati.dev/"
     allowedActions: [read_any_file]
     blockedActions: [modify_project_code]
@@ -93,7 +93,7 @@ rules:
     const result = runPrism({
       domainsDir,
       remainingPercent: 80,
-      mode: 'clarity',
+      mode: 'planning',
       agent: 'brief',
       workflow: 'greenfield-fullstack',
       pipelinePosition: 'brief',
@@ -112,7 +112,7 @@ rules:
     const result = runPrism({
       domainsDir,
       remainingPercent: 45,
-      mode: 'clarity',
+      mode: 'planning',
       agent: 'brief',
       workflow: 'greenfield-fullstack',
       pipelinePosition: 'brief',
@@ -146,7 +146,7 @@ rules:
     const result = runPrism({
       domainsDir,
       remainingPercent: 80,
-      mode: 'clarity',
+      mode: 'planning',
     });
 
     const layerNames = result.layers.map(l => l.layer);
@@ -157,7 +157,7 @@ rules:
     const result = runPrism({
       domainsDir,
       remainingPercent: 80,
-      mode: 'clarity',
+      mode: 'planning',
       agent: 'brief',
     });
 
@@ -180,10 +180,10 @@ rules:
     const result = runPrism({
       domainsDir,
       remainingPercent: 80,
-      mode: 'clarity',
+      mode: 'planning',
     });
 
-    assert.ok(result.xml.includes('<mode name="clarity">'));
+    assert.ok(result.xml.includes('<mode name="planning">'));
     assert.ok(result.xml.includes('chati.dev/'));
   });
 

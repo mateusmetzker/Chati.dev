@@ -2,7 +2,7 @@ import { readDashboardData } from './data-reader.js';
 import {
   buildHeader,
   buildProjectInfo,
-  buildClaritySection,
+  buildPlanningSection,
   buildBuildSection,
   buildValidateSection,
   buildIntelligenceSection,
@@ -25,7 +25,7 @@ export async function renderDashboard(targetDir) {
     ...buildHeader(data),
     ...buildProjectInfo(data),
     '',
-    ...buildClaritySection(data),
+    ...buildPlanningSection(data),
     '',
     ...buildBuildSection(data),
     '',

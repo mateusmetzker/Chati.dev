@@ -14,7 +14,7 @@ function setupFixtures() {
 id: brief-extract
 agent: brief
 trigger: orchestrator
-phase: clarity
+phase: planning
 requires_input: true
 parallelizable: false
 outputs: [brief.yaml]
@@ -67,7 +67,7 @@ describe('loader', () => {
       const content = `---
 id: test-task
 agent: brief
-phase: clarity
+phase: planning
 requires_input: true
 outputs: [doc.yaml]
 criteria:
@@ -81,7 +81,7 @@ Do the thing.`;
       assert.equal(result.loaded, true);
       assert.equal(result.task.id, 'test-task');
       assert.equal(result.task.agent, 'brief');
-      assert.equal(result.task.phase, 'clarity');
+      assert.equal(result.task.phase, 'planning');
       assert.equal(result.task.requires_input, true);
       assert.deepEqual(result.task.outputs, ['doc.yaml']);
       assert.deepEqual(result.task.criteria, ['First criterion', 'Second criterion']);

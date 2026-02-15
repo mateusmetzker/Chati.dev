@@ -1,0 +1,26 @@
+# Greenfield Fullstack Workflow Domain — PRISM L3
+# Full pipeline for new projects
+
+steps:
+  - greenfield-wu
+  - brief
+  - detail
+  - architect
+  - ux
+  - phases
+  - tasks
+  - qa-planning
+  - dev
+  - qa-implementation
+  - devops
+
+rules:
+  - id: gf-order
+    text: "Follow pipeline order strictly. WU must complete before Brief."
+    priority: high
+  - id: gf-parallel
+    text: "Detail, Architect, and UX can run in parallel after Brief."
+    priority: normal
+  - id: gf-gate
+    text: "QA-Planning gate must pass before entering BUILD phase."
+    priority: critical

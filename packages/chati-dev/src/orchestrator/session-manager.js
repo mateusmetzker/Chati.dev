@@ -16,7 +16,7 @@ const SESSION_FILE = '.chati/session.yaml';
  */
 const DEFAULT_SESSION = {
   version: '1.0',
-  mode: 'clarity',
+  mode: 'planning',
   language: 'en',
   project_type: 'greenfield',
   started_at: null,
@@ -65,7 +65,7 @@ export function initSession(projectDir, options = {}) {
 
   const session = {
     ...DEFAULT_SESSION,
-    mode: options.mode || 'clarity',
+    mode: options.mode || 'planning',
     language: options.language || 'en',
     project_type: options.isGreenfield === false ? 'brownfield' : 'greenfield',
     started_at: new Date().toISOString(),
@@ -383,7 +383,7 @@ export function validateSession(projectDir) {
   }
 
   // Validate mode
-  const validModes = ['clarity', 'build', 'validate', 'deploy', 'completed'];
+  const validModes = ['planning', 'build', 'validate', 'deploy', 'completed'];
   if (!validModes.includes(session.mode)) {
     return {
       exists: true,
