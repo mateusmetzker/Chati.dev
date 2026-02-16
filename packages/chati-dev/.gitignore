@@ -2,3 +2,6 @@
 framework/
 README.md
 node_modules/
+
+# Ed25519 signing key (NEVER commit)
+.signing-key.pem

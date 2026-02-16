@@ -1,5 +1,7 @@
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
+import { hashFile } from './file-hasher.js';
+import { loadManifest } from './manifest.js';
 
 /**
  * Validate chati.dev installation
@@ -17,6 +19,7 @@ export async function validateInstallation(targetDir) {
     registry: { pass: false, details: [] },
     memories: { pass: false, details: [] },
     context: { pass: false, details: [] },
+    integrity: { pass: false, details: [] },
     total: 0,
     passed: 0,
   };
@@ -165,6 +168,36 @@ export async function validateInstallation(targetDir) {
   results.context.details.push({ found: contextCount, expected: 4 });
   results.total += 1;
   if (results.context.pass) results.passed += 1;
+
+  // Check integrity: verify installed files match manifest hashes
+  const manifest = loadManifest(targetDir);
+  if (manifest && manifest.files) {
+    let matched = 0;
+    let mismatched = 0;
+    const mismatches = [];
+
+    for (const [relPath, entry] of Object.entries(manifest.files)) {
+      const absPath = join(targetDir, 'chati.dev', relPath);
+      if (existsSync(absPath)) {
+        const currentHash = hashFile(absPath);
+        if (currentHash === entry.hash) {
+          matched++;
+        } else {
+          mismatched++;
+          mismatches.push(relPath);
+        }
+      }
+    }
+
+    results.integrity.pass = mismatched === 0;
+    results.integrity.details.push({ matched, mismatched, mismatches });
+  } else {
+    // No manifest = skip integrity (first install or dev environment)
+    results.integrity.pass = true;
+    results.integrity.details.push({ skipped: true, reason: 'no-manifest' });
+  }
+  results.total += 1;
+  if (results.integrity.pass) results.passed += 1;
 
   return results;
 }

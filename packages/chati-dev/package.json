@@ -1,6 +1,6 @@
 {
   "name": "chati-dev",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "AI-Powered Multi-Agent Orchestration System — Structured vibe coding for Full Stack Development",
   "type": "module",
   "bin": {
@@ -24,7 +24,7 @@
   "scripts": {
     "start": "node bin/chati.js",
     "bundle": "node scripts/bundle-framework.js",
-    "prepublishOnly": "node scripts/bundle-framework.js",
+    "prepublishOnly": "node scripts/bundle-framework.js && node scripts/validate-package.js && node scripts/sign-manifest.js",
     "test": "node --test test/**/*.test.js",
     "lint": "eslint src/ bin/",
     "lint:fix": "eslint src/ bin/ --fix"

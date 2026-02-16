@@ -114,7 +114,7 @@ describe('validateInstallation', () => {
 
   it('returns correct total count', async () => {
     const results = await validateInstallation(tempDir);
-    assert.equal(results.total, 10, 'should check 10 categories');
+    assert.equal(results.total, 11, 'should check 11 categories');
   });
 
   it('fails intelligence when spec files are missing', async () => {

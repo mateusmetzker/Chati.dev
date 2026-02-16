@@ -6,9 +6,9 @@
  * benchmarks are met, and security scans are clean.
  *
  * Verdicts:
- *   PASS     — All criteria met, score >= 90%
- *   CONCERNS — Score 85-90%, minor issues noted
- *   FAIL     — Score < 85% or critical issues
+ *   PASS     — All criteria met, score >= 95%
+ *   CONCERNS — Score 90-95%, minor issues noted
+ *   FAIL     — Score < 90% or critical issues
  *   WAIVED   — Human explicitly overrode
  */
 
@@ -127,11 +127,11 @@ export class QAImplementationGate extends GateBase {
       return QA_IMPL_VERDICTS.FAIL;
     }
 
-    if (score >= 90 && evidence.allTestCriteriaMet) {
+    if (score >= 95 && evidence.allTestCriteriaMet) {
       return QA_IMPL_VERDICTS.PASS;
     }
 
-    if (score >= 85) {
+    if (score >= 90) {
       return QA_IMPL_VERDICTS.CONCERNS;
     }
 
@@ -151,7 +151,7 @@ export class QAImplementationGate extends GateBase {
       'No critical bugs open',
       'Performance benchmarks met',
       'Security scan clean',
-      'QA-Implementation score >= 90',
+      'QA-Implementation score >= 95',
     ];
 
     const criteriaResults = [];
@@ -192,10 +192,10 @@ export class QAImplementationGate extends GateBase {
     }
 
     // Check score
-    if (evidence.qaImplHandoff && evidence.qaImplHandoff.score >= 90) {
-      criteriaResults.push('QA-Implementation score >= 90');
+    if (evidence.qaImplHandoff && evidence.qaImplHandoff.score >= 95) {
+      criteriaResults.push('QA-Implementation score >= 95');
     } else if (evidence.qaImplHandoff) {
-      warnings.push(`QA-Impl score: ${evidence.qaImplHandoff.score} (need >= 90)`);
+      warnings.push(`QA-Impl score: ${evidence.qaImplHandoff.score} (need >= 95)`);
     }
 
     const score = allCriteria.length > 0

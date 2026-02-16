@@ -26,7 +26,7 @@ export const AGENT_STATUS = {
  * Required QA score for phase transitions.
  */
 const QA_PLANNING_THRESHOLD = 95;
-const QA_IMPLEMENTATION_THRESHOLD = 90;
+const QA_IMPLEMENTATION_THRESHOLD = 95;
 
 /**
  * Initialize a new pipeline for a project.

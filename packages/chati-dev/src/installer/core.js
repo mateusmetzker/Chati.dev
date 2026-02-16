@@ -1,9 +1,10 @@
-import { mkdirSync, writeFileSync, copyFileSync, existsSync } from 'fs';
+import { mkdirSync, writeFileSync, copyFileSync, existsSync, readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { IDE_CONFIGS } from '../config/ide-configs.js';
 import { generateClaudeMCPConfig } from '../config/mcp-configs.js';
 import { generateSessionYaml, generateConfigYaml, generateClaudeMd, generateClaudeLocalMd } from './templates.js';
+import { verifyManifest } from './manifest.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -18,6 +19,20 @@ const FRAMEWORK_SOURCE = existsSync(BUNDLED_SOURCE) ? BUNDLED_SOURCE : MONOREPO_
  */
 export async function installFramework(config) {
   const { targetDir, projectType, language, selectedIDEs, selectedMCPs, projectName, version } = config;
+
+  // 0. Verify framework signature (supply chain protection)
+  const manifestPath = join(FRAMEWORK_SOURCE, 'manifest.json');
+  const sigPath = join(FRAMEWORK_SOURCE, 'manifest.sig');
+
+  if (existsSync(manifestPath) && existsSync(sigPath)) {
+    const manifest = JSON.parse(readFileSync(manifestPath, 'utf-8'));
+    const signature = readFileSync(sigPath, 'utf-8').trim();
+    const result = verifyManifest(manifest, signature);
+
+    if (!result.valid && result.reason === 'signature-mismatch') {
+      throw new Error('Framework signature verification failed. Package may have been tampered with.');
+    }
+  }
 
   // 1. Create .chati/ session directory
   createDir(join(targetDir, '.chati'));

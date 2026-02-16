@@ -1,9 +1,24 @@
 import { readFileSync, writeFileSync, existsSync, statSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { verify as cryptoVerify, createPublicKey } from 'crypto';
 import { hashFile } from './file-hasher.js';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
 const MANIFEST_FILENAME = 'manifest.json';
 const MANIFEST_DIR = '.chati';
+
+/**
+ * Load the Ed25519 public key for signature verification.
+ * Returns null if key file doesn't exist (dev environment).
+ */
+let SIGNING_PUBLIC_KEY = null;
+try {
+  const pemPath = join(__dirname, 'signing-public-key.pem');
+  SIGNING_PUBLIC_KEY = createPublicKey(readFileSync(pemPath));
+} catch {
+  // Public key not available (dev environment without key generation)
+}
 
 /**
  * Generate a manifest for a set of files under a root directory.
@@ -114,4 +129,21 @@ export function compareManifests(oldManifest, newManifest) {
   }
 
   return { added, removed, modified, unchanged };
+}
+
+/**
+ * Verify a manifest signature using the embedded Ed25519 public key.
+ *
+ * @param {object} manifest - The manifest object to verify
+ * @param {string} signatureBase64 - Base64-encoded Ed25519 signature
+ * @returns {{ valid: boolean, reason: string }}
+ */
+export function verifyManifest(manifest, signatureBase64) {
+  if (!SIGNING_PUBLIC_KEY) return { valid: false, reason: 'no-public-key' };
+
+  const manifestJson = JSON.stringify(manifest, Object.keys(manifest).sort(), 2);
+  const signature = Buffer.from(signatureBase64, 'base64');
+
+  const valid = cryptoVerify(null, Buffer.from(manifestJson), SIGNING_PUBLIC_KEY, signature);
+  return { valid, reason: valid ? 'ok' : 'signature-mismatch' };
 }

@@ -554,7 +554,7 @@ describe('quality-gates', () => {
       setupProjectDir(dir, {
         handoffs: {
           'qa-implementation': {
-            score: 87,
+            score: 92,
             status: 'complete',
             outputs: [],
             blockers: [],

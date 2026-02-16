@@ -238,7 +238,7 @@ describe('pipeline-manager', () => {
       state.phase = 'build';
       state.agents['dev'].status = AGENT_STATUS.COMPLETED;
       state.agents['qa-implementation'].status = AGENT_STATUS.COMPLETED;
-      state.agents['qa-implementation'].score = 92;
+      state.agents['qa-implementation'].score = 96;
 
       const result = checkPhaseTransition(state);
 

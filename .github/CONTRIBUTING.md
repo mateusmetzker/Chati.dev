@@ -100,7 +100,7 @@ chati-dev/
 ### Testing Changes Locally
 
 ```bash
-# Run unit tests (901 tests)
+# Run unit tests (944 tests)
 cd packages/chati-dev
 npm test
 
@@ -121,6 +121,15 @@ node bin/chati.js health /tmp/test-project
 
 # Bundle framework (done automatically on publish)
 npm run bundle
+
+# Semantic lint (cross-reference validation)
+node scripts/semantic-lint.js
+
+# Package validation (after bundle)
+node scripts/validate-package.js
+
+# Full prepublishOnly pipeline
+npm run bundle && node scripts/validate-package.js && node scripts/sign-manifest.js
 ```
 
 ---

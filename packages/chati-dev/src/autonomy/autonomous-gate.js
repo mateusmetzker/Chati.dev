@@ -17,7 +17,7 @@ export const GATE_RESULTS = {
 // Minimum passing scores per agent (conservative: 90 default)
 const GATE_THRESHOLDS = {
   'qa-planning': 95,        // Highest — gates planning→build transition
-  'qa-implementation': 90,  // Gates build→deploy transition
+  'qa-implementation': 95,  // Gates build→deploy transition
   'brief': 90,              // Requirements are critical
   'detail': 90,
   'architect': 90,

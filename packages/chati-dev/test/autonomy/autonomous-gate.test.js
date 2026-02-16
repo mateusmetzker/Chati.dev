@@ -163,8 +163,8 @@ describe('autonomous-gate', () => {
       assert.equal(getGateThreshold('qa-planning'), 95);
     });
 
-    it('should return 90 for qa-implementation', () => {
-      assert.equal(getGateThreshold('qa-implementation'), 90);
+    it('should return 95 for qa-implementation', () => {
+      assert.equal(getGateThreshold('qa-implementation'), 95);
     });
 
     it('should return 90 for brief', () => {

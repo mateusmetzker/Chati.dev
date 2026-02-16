@@ -47,7 +47,8 @@ PLANNING (planning)  →  Quality Gate  →  BUILD  →  Quality Gate  →  DEPL
 | **Memory System RECALL** | 4 cognitive sectors. Persistent knowledge across sessions with attention scoring and natural decay |
 | **Decision Engine COMPASS** | Entity catalog with Jaccard similarity for REUSE/ADAPT/CREATE decisions. Self-healing registry |
 | **Session Lock** | Once activated, user stays in system until explicit exit. Zero accidental leakage |
-| **Hooks System** | 5 Claude Code hooks — constitution guard, mode governance, model governance, context injection, session digest |
+| **Hooks System** | 6 Claude Code hooks — constitution guard, mode governance, model governance, read protection, context injection, session digest |
+| **Supply Chain Security** | Ed25519 manifest signing. Package integrity verification on install. Semantic linter for cross-reference validation |
 | **Execution Modes** | Autonomous and human-in-the-loop modes with safety net (5 triggers) and circuit breaker |
 | **Multi-Terminal** | Autonomous agents spawn in separate `claude -p` terminals with dedicated models. Parallel groups (Detail + Architect + UX) with write-scope isolation |
 | **IDE-Agnostic** | Works with 6 IDEs through a thin router pattern |
@@ -276,7 +277,7 @@ your-project/
 │   ├── schemas/                  # 5 JSON schemas for validation
 │   ├── intelligence/             # Context Engine, Memory Layer, Decision Engine
 │   ├── domains/                  # Domain loading configs (per-agent, per-workflow)
-│   ├── hooks/                    # 5 Claude Code hooks (enforcement)
+│   ├── hooks/                    # 6 Claude Code hooks (enforcement)
 │   ├── context/                  # Context source files (deployed to .claude/rules/)
 │   ├── frameworks/               # Decision heuristics, quality dims
 │   ├── quality-gates/            # Planning & implementation gates

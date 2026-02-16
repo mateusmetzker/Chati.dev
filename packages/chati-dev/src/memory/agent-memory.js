@@ -216,6 +216,26 @@ export function searchAgentMemories(projectDir, query) {
 }
 
 /**
+ * Get top memory entries for an agent, sorted by confidence.
+ * Used by orchestrator/agents for programmatic memory access.
+ * @param {string} projectDir - Project directory
+ * @param {string} agentName - Agent name
+ * @param {number} [limit=5] - Max entries to return
+ * @returns {object[]} Top entries sorted by confidence (high → medium → low)
+ */
+export function getTopMemories(projectDir, agentName, limit = 5) {
+  const memory = readAgentMemory(projectDir, agentName);
+  if (!memory.loaded) return [];
+
+  const confidenceOrder = { high: 3, medium: 2, low: 1 };
+  const sorted = [...memory.entries].sort((a, b) => {
+    return (confidenceOrder[b.confidence] || 2) - (confidenceOrder[a.confidence] || 2);
+  });
+
+  return sorted.slice(0, limit);
+}
+
+/**
  * Get memory stats per agent.
  * @param {string} projectDir - Project directory
  * @returns {object} { byAgent: { agent: { entries, lastUpdated } } }

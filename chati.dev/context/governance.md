@@ -32,6 +32,6 @@ Extracted from `chati.dev/constitution.md` (17 Articles). Read the full constitu
 - Model recorded in session for cost tracking
 
 ## Execution Mode (Article XVII)
-- Autonomous mode requires gate score >= 90% (qa-planning >= 95%)
+- Autonomous mode requires gate score >= 90% (qa-planning >= 95%, qa-implementation >= 95%)
 - Safety net with 5 triggers: stuck loop, quality drop, scope creep, error cascade, user override
 - Circuit breaker: CLOSED -> OPEN (3 failures) -> HALF_OPEN (probe)

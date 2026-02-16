@@ -384,7 +384,7 @@ The system SHALL support two execution modes that govern the degree of human inv
 
 3. Quality gate thresholds are conservative by default:
    - **qa-planning**: 95% minimum (gates planning-to-build transition)
-   - **qa-implementation**: 90% minimum (gates build-to-deploy transition)
+   - **qa-implementation**: 95% minimum (gates build-to-deploy transition)
    - **All other agents**: 90% minimum
    - Scores below threshold trigger escalation regardless of execution mode.
 

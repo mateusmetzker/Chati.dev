@@ -5,6 +5,103 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.7] - 2026-02-16
+
+### Added
+
+- **Ed25519 Manifest Signing**: Cryptographic signing of framework files during `npm publish`. Verified on `npx chati-dev init` install. Ed25519 keypair generation, SHA-256 per-file hashes, tamper detection with clear error messages
+- **Read Protection Hook**: Claude Code PreToolUse hook that blocks reads of sensitive files (`.env`, `.pem`, `.key`, `credentials.*`, `secrets.*`, `.git/config`). Allows safe exceptions (`.env.example`, `signing-public-key.pem`). References Article IV
+- **Per-Agent Persistent Memory**: PRISM engine now injects agent's `MEMORY.md` into context via `<agent-memory>` block. New `getTopMemories()` function sorts entries by confidence level (high > medium > low)
+- **Semantic Linter** (`scripts/semantic-lint.js`): Cross-reference validation across entity registry, domain-agent alignment, workflow-agent references, i18n completeness, schema existence, and Constitution article count
+- **Package Completeness Validator** (`scripts/validate-package.js`): Pre-publish validation of framework bundle — checks directory structure, root files, entity count, sensitive file exclusion, package exports, and bin entry
+- **Signing Key Generator** (`scripts/generate-signing-key.js`): Ed25519 keypair generation utility for maintainers
+
+### Changed
+
+- `prepublishOnly` pipeline: `bundle-framework → validate-package → sign-manifest`
+- QA-Implementation gate threshold raised from 90% to 95% (PASS) and 85% to 90% (CONCERNS)
+- Hooks count updated from 5 to 6 (added read-protection)
+- Constitution and governance context files updated to reflect 6 hooks and supply chain security
+- Installer validator now checks Ed25519 manifest integrity on install
+
+### Stats
+
+- **944 tests** across 104 test suites (0 failures)
+- **6 new files** + **5 modified files**
+
+---
+
+## [2.0.6] - 2026-02-15
+
+### Changed
+
+- Wizard simplified: auto-install MCPs (context7 + browser) and auto-configure Claude Code IDE
+- Removed manual MCP selection step and IDE selection step from wizard
+- Removed 4 redundant MCPs: exa, desktop-commander, sequential-thinking, github
+- Cleaned AGENT_MCP_DEPS: removed phantom references (git, coderabbit, exa, github)
+- Wizard now: Language → Project Type → Confirmation → Installation
+- Removed `getMCPChoices()`, `getMCPWarnings()`, `stepIDEs()`, `stepMCPs()`
+- Added `DEFAULT_MCPS` export for programmatic use
+- Removed `select_mcps`/`select_ides` from all i18n files (en, pt, es, fr)
+
+---
+
+## [2.0.5] - 2026-02-14
+
+### Added
+
+- **Multi-Terminal Agent Spawning**: Orchestrator now spawns autonomous agents in separate `claude -p` terminals with correct model assignments (haiku/sonnet/opus per spec). Interactive agents (WU, Brief) remain in-conversation. Parallel groups supported (Detail + Architect + UX simultaneously)
+- **Terminal Modules**: prompt-builder, handoff-parser, run-agent, run-parallel
+- **Enhanced Spawner**: `--model` flag and stdin prompt piping for shell injection prevention
+
+### Changed
+
+- **CLARITY → PLANNING**: Renamed first pipeline phase across ~150 files. Folder `agents/clarity/` → `agents/planning/`, mode values, category labels, variables, object keys, Constitution wording — nomenclature only, no logic change
+- Wizard simplified from 6 to 4 steps: auto-install MCPs, auto-configure Claude Code
+- Tagline updated to "Structured vibe coding for Full Stack Development."
+- README rewritten with new pipeline diagram showing terminal spawning, model assignments, and parallel execution
+- CONTRIBUTING updated for Node >= 20, terminal module docs
+- SECURITY updated with multi-terminal security section (write scope isolation, model enforcement, stdin piping, parallel validation)
+
+### Stats
+
+- **901 tests** (46 new for multi-terminal), 0 failures
+
+---
+
+## [2.0.4] - 2026-02-14
+
+### Changed
+
+- **Parallelization as Default**: Added mandatory step 4.5 (PARALLELIZATION CHECK) to orchestrator transition logic
+- Group 1: Detail + Architect + UX parallel after Brief (autonomous=default, HITL=option)
+- Group 2: Dev tasks always parallel regardless of mode
+- Renamed "Parallelization Hints" to "Parallelization Rules" in orchestrator
+- Renamed "Parallelization Hints" to "Parallelization" in all 7 agents
+- Brief handoff now sets `next_parallel_group` instead of single `current_agent`
+- Dev agent gets new Parallelization section for task-level parallelism
+
+---
+
+## [2.0.3] - 2026-02-13
+
+### Changed
+
+- **Brand Rename**: Project renamed to Chati.dev (capital C) across all files
+- All GitHub URLs updated to match renamed repo (`ogabrielalonso/Chati.dev`)
+- SVG logo text capitalized
+- CI pipeline updated: skip npm publish when version already exists
+
+---
+
+## [2.0.2] - 2026-02-13
+
+### Fixed
+
+- **i18n Language Override**: Thin router now reads language from `.chati/session.yaml` BEFORE loading the orchestrator, overriding the IDE's global language setting. This makes the i18n language selection (EN/PT/ES/FR) actually work during active sessions
+
+---
+
 ## [2.0.1] - 2026-02-13
 
 ### Added

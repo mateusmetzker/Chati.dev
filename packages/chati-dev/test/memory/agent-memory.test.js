@@ -9,6 +9,7 @@ import {
   writeAgentMemory,
   searchAgentMemories,
   getAgentMemoryStats,
+  getTopMemories,
 } from '../../src/memory/agent-memory.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -144,6 +145,42 @@ describe('Agent Memory', () => {
     const results = searchAgentMemories(emptyDir, 'anything');
 
     assert.deepEqual(results, []);
+  });
+
+  it('should return top memories sorted by confidence', () => {
+    // Write entries with different confidence levels
+    writeAgentMemory(tempDir, 'phases', {
+      category: 'Planning',
+      content: 'Low confidence insight',
+      confidence: 'low',
+    });
+    writeAgentMemory(tempDir, 'phases', {
+      category: 'Planning',
+      content: 'High confidence insight',
+      confidence: 'high',
+    });
+    writeAgentMemory(tempDir, 'phases', {
+      category: 'Planning',
+      content: 'Medium confidence insight',
+      confidence: 'medium',
+    });
+
+    const top = getTopMemories(tempDir, 'phases', 3);
+    assert.equal(top.length, 3);
+    assert.equal(top[0].confidence, 'high');
+    assert.equal(top[1].confidence, 'medium');
+    assert.equal(top[2].confidence, 'low');
+  });
+
+  it('should respect limit in getTopMemories', () => {
+    const top = getTopMemories(tempDir, 'phases', 1);
+    assert.equal(top.length, 1);
+    assert.equal(top[0].confidence, 'high');
+  });
+
+  it('should return empty array for non-existent agent memory', () => {
+    const top = getTopMemories(tempDir, 'nonexistent-agent');
+    assert.deepEqual(top, []);
   });
 
   it('should preserve content accurately', () => {

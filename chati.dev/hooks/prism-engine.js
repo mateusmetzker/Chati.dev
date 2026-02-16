@@ -66,12 +66,26 @@ async function main() {
     else if (remainingPercent < 40) bracket = 'DEPLETED';
     else if (remainingPercent < 60) bracket = 'MODERATE';
 
+    // Load agent memory (if active agent has MEMORY.md)
+    let memoryBlock = '';
+    if (session.currentAgent) {
+      const memoryPath = join(projectDir, '.chati', 'memories', session.currentAgent, 'MEMORY.md');
+      if (existsSync(memoryPath)) {
+        const raw = readFileSync(memoryPath, 'utf-8').trim();
+        if (raw) {
+          const trimmed = raw.slice(0, 500);
+          memoryBlock = `  <agent-memory agent="${session.currentAgent}">\n${trimmed}\n  </agent-memory>`;
+        }
+      }
+    }
+
     // Build minimal context block (full PRISM pipeline is used by orchestrator internally)
     const contextBlock = [
       `<chati-context bracket="${bracket}">`,
       `  <mode>${session.mode}</mode>`,
       session.currentAgent ? `  <agent>${session.currentAgent}</agent>` : '',
       session.pipelinePosition ? `  <pipeline-position>${session.pipelinePosition}</pipeline-position>` : '',
+      memoryBlock,
       bracket === 'CRITICAL' ? '  <advisory>Context running low. Consider handoff or summary.</advisory>' : '',
       '</chati-context>',
     ].filter(Boolean).join('\n');
@@ -86,4 +100,10 @@ async function main() {
   }
 }
 
-main();
+export { readSessionState };
+
+// Only run main when executed directly (not imported by tests)
+import { fileURLToPath } from 'url';
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main();
+}

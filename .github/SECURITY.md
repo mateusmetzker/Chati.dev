@@ -81,6 +81,32 @@ If you discover a security vulnerability in Chati.dev, please report it responsi
 3. **Session Isolation**: `.chati/session.yaml` and `.chati/memories/` are gitignored by default
 4. **Constitution Enforcement**: Security violations halt the pipeline (Article IV)
 5. **Session Lock**: Active sessions cannot be bypassed to access raw AI mode (Article XV)
+6. **Supply Chain Integrity**: Ed25519 manifest signing on publish, verified on install (Article IV)
+7. **Read Protection**: Sensitive file reads blocked by hook before execution (Article IV)
+
+### Supply Chain Security
+
+Package integrity is enforced through cryptographic signing:
+
+| Stage | What Happens |
+|-------|-------------|
+| **Publish** | `sign-manifest.js` generates SHA-256 hash for every framework file, signs the manifest with Ed25519 private key, embeds signature + public key in package |
+| **Install** | `npx chati-dev init` verifies Ed25519 signature against public key, validates per-file SHA-256 hashes, blocks installation if tampered |
+| **Validation** | `npx chati-dev health` includes manifest integrity check |
+
+The signing key (`signing-public-key.pem`) is embedded in the package. The private key is never published.
+
+### Read Protection
+
+A Claude Code PreToolUse hook (`read-protection.js`) blocks reads of sensitive files:
+
+| Blocked Pattern | Example |
+|----------------|---------|
+| `.env`, `.env.*` (except `.env.example`) | `.env.production`, `.env.local` |
+| `*.pem` (except `signing-public-key.pem`) | `server.pem`, `private.pem` |
+| `*.key` | `server.key`, `tls.key` |
+| `credentials.*`, `secrets.*` | `credentials.json`, `secrets.yaml` |
+| `.git/config` | May contain access tokens |
 
 ### Multi-Terminal Security
 
