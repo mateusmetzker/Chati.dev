@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Multi-CLI Architecture**: CLI Provider Registry + Adapter pattern for Claude Code, Gemini CLI, Codex CLI, and Copilot CLI
+- **Multi-CLI Architecture**: CLI Provider Registry + Adapter pattern for Claude Code, Gemini CLI, Codex CLI, and GitHub Copilot CLI
 - **CLI Adapters**: Per-provider command/args builders (claude-adapter, gemini-adapter, codex-adapter, copilot-adapter)
 - **Context File Generator**: Auto-generates GEMINI.md and AGENTS.md from CLAUDE.md when alternative providers are enabled
 - **Execution Profiles**: 3 profiles (explore/guided/autonomous) orthogonal to mode governance — controls confirmation requirements

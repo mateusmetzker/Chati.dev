@@ -25,7 +25,7 @@ The orchestrator injects context through 5 hierarchical layers:
 
 | Layer | Name | Source | When Active |
 |-------|------|--------|-------------|
-| **L0** | Constitution | `chati.dev/constitution.md` (Articles I-XVII) | ALWAYS (non-negotiable) |
+| **L0** | Constitution | `chati.dev/constitution.md` (Articles I-XIX) | ALWAYS (non-negotiable) |
 | **L1** | Mode + Global | `config.yaml` + mode governance (planning/build/deploy) | ALWAYS |
 | **L2** | Agent Scope | `chati.dev/agents/{agent}/` — mission, inputs, outputs, criteria | When agent is active |
 | **L3** | Pipeline State | `.chati/session.yaml` — pipeline position, scores, backlog | When session is active |
@@ -49,7 +49,7 @@ The orchestrator produces a structured XML block injected into agent prompts:
 ```xml
 <chati-context bracket="MODERATE">
   <constitution>
-    Articles I-XVII governing agent behavior.
+    Articles I-XIX governing agent behavior.
     Key: Self-validation required. Loop until quality threshold.
     Guided options (1,2,3). Persistent session state.
     Two-layer handoff. Language protocol. Deviation protocol.
@@ -168,7 +168,7 @@ If Smart Continuation is insufficient, the orchestrator spawns a new session:
 
 When agents execute on different CLI providers, context injection adapts to the provider's capabilities:
 
-### Hook-Based Providers (Claude Code, Gemini CLI, Copilot CLI)
+### Hook-Based Providers (Claude Code, Gemini CLI, GitHub Copilot CLI)
 - PRISM context injected via `UserPromptSubmit` hook
 - Mode governance enforced via `PreToolUse` hook
 - Constitution guard enforced via `PreToolUse` hook
@@ -186,7 +186,7 @@ When agents execute on different CLI providers, context injection adapts to the 
 | Claude Code | CLAUDE.md | Native (already exists) |
 | Gemini CLI | GEMINI.md | Auto-generated from CLAUDE.md |
 | Codex CLI | AGENTS.md | Auto-generated from CLAUDE.md |
-| Copilot CLI | All three | Reads CLAUDE.md, GEMINI.md, AGENTS.md natively |
+| GitHub Copilot CLI | All three | Reads CLAUDE.md, GEMINI.md, AGENTS.md natively |
 
 ### Cross-Provider Handoff
 Handoff format is identical regardless of which provider executed the agent. The two-layer structure (Article VIII) ensures any provider can read any handoff. Session state in `.chati/session.yaml` is the single source of truth — all providers read from and write to the same session file.
