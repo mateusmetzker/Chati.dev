@@ -100,7 +100,7 @@ Chati.dev/
 ### Testing Changes Locally
 
 ```bash
-# Run unit tests (944 tests)
+# Run unit tests (990 tests)
 cd packages/chati-dev
 npm test
 
@@ -398,7 +398,7 @@ All contributions must comply with the [Constitution](chati.dev/constitution.md)
 
 ## License
 
-This project is licensed under the [Business Source License 1.1](../LICENSE). By contributing, you agree that your contributions will be licensed under the same terms. The license converts to Apache 2.0 on 2030-02-16.
+[MIT](../LICENSE). By contributing, you agree to these terms.
 
 ---
 

@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/chati-dev"><img src="https://img.shields.io/npm/v/chati-dev?color=blue&label=npm" alt="npm"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-BSL_1.1-blue.svg" alt="License: BSL 1.1"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
   <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/node-%3E%3D20.0.0-brightgreen.svg" alt="Node.js"></a>
   <a href="#internationalization"><img src="https://img.shields.io/badge/i18n-EN%20%7C%20PT%20%7C%20ES%20%7C%20FR-informational.svg" alt="i18n"></a>
   <a href=".github/CONTRIBUTING.md"><img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg" alt="Contributions Welcome"></a>
@@ -16,13 +16,26 @@
 
 ---
 
-A structured, agent-driven orchestration system that coordinates **13 specialized AI agents** across the full software development lifecycle — from requirements gathering to deployment. Every decision is traceable, every artifact is validated, every session persists.
+## What is Chati.dev?
+
+Chati.dev is a system that **turns AI into a structured development team**. Instead of chatting with a single AI that forgets everything between sessions, you get 13 specialized agents — each with a clear role — working together through a defined pipeline.
+
+You describe what you want to build. The agents handle requirements, architecture, planning, coding, testing, and deployment — in order, with quality gates between each phase.
+
+```
+You → DISCOVER → PLAN → BUILD → DEPLOY → Done
+       "what"   "how"  "code"   "ship"
+```
+
+Every decision is saved. Every artifact is validated. If you close your laptop and come back tomorrow, the system picks up exactly where you left off.
+
+---
 
 ## Why Chati.dev?
 
 ### The Problem
 
-AI-assisted development today suffers from three critical issues:
+AI-assisted development today has three critical issues:
 
 1. **Context Loss** — AI forgets decisions across sessions, leading to inconsistent implementations
 2. **Planning Gaps** — Jumping straight to code without structured requirements leads to rework
@@ -30,41 +43,18 @@ AI-assisted development today suffers from three critical issues:
 
 ### The Solution
 
-Chati.dev introduces **Agent-Driven Development**: a pipeline of 13 specialized agents where each agent owns a specific phase, produces validated artifacts, and hands off context to the next agent. An Intelligence Layer ensures context is never lost, knowledge persists across sessions, and the user never accidentally leaves the system.
-
-```
-DISCOVER  →  PLAN  →  Quality Gate  →  BUILD  →  Quality Gate  →  DEPLOY
- 3 agents    5 agents   QA-Planning     Dev        QA-Impl        DevOps
-```
-
-### Key Innovations
-
-| Innovation | Description |
-|------------|-------------|
-| **Structured Agent Pipeline** | 13 agents with defined missions, validated outputs, and handoff protocols |
-| **Self-Validating Agents** | Binary pass/fail criteria per agent. 5 quality gates with circuit breaker |
-| **Context Engine PRISM** | 5-layer injection pipeline with bracket tracking (FRESH → CRITICAL). Autonomous recovery |
-| **Memory System RECALL** | 4 cognitive sectors. Persistent knowledge across sessions with attention scoring and natural decay |
-| **Decision Engine COMPASS** | Entity catalog with Jaccard similarity for REUSE/ADAPT/CREATE decisions. Self-healing registry |
-| **Session Lock** | Once activated, user stays in system until explicit exit. Zero accidental leakage |
-| **Hooks System** | 6 Claude Code hooks — constitution guard, mode governance, model governance, read protection, context injection, session digest |
-| **Supply Chain Security** | Ed25519 manifest signing. Package integrity verification on install. Semantic linter for cross-reference validation |
-| **Execution Modes** | Autonomous and human-in-the-loop modes with safety net (5 triggers) and circuit breaker |
-| **Multi-Terminal** | Autonomous agents spawn in separate `claude -p` terminals with dedicated models. Parallel groups (Detail + Architect + UX) with write-scope isolation |
-| **IDE-Agnostic** | Works with 6 IDEs through a thin router pattern |
+Chati.dev introduces **Agent-Driven Development**: a pipeline where each agent owns a specific phase, produces validated artifacts, and hands off context to the next agent. The system ensures context is never lost, knowledge persists across sessions, and you never accidentally leave the pipeline.
 
 ---
 
-## Prerequisites
+## Quick Start
+
+### Prerequisites
 
 - **Node.js** >= 20.0.0 ([download](https://nodejs.org/))
 - **Claude Code** — the CLI for Claude ([install guide](https://docs.anthropic.com/en/docs/claude-code/overview))
 
 Other supported IDEs: VS Code, Cursor, Gemini CLI, GitHub Copilot, AntiGravity (see [Supported IDEs](#supported-ides)).
-
----
-
-## Quick Start
 
 ### 1. Install in your project
 
@@ -74,9 +64,9 @@ Open a terminal in your project directory:
 npx chati-dev init
 ```
 
-The wizard asks your language and project type, then auto-configures Claude Code with the required MCPs.
+The wizard asks your language and project type, then auto-configures everything.
 
-### 2. Start Claude Code and activate
+### 2. Activate the orchestrator
 
 Open Claude Code in the same project directory, then type:
 
@@ -86,11 +76,20 @@ Open Claude Code in the same project directory, then type:
 
 The orchestrator loads your session, detects where you left off, and routes you to the right agent. You stay inside the system until you explicitly exit.
 
-### 3. Build
+### 3. Follow the pipeline
 
-From here, the agents take over. You'll go through Planning (requirements, architecture, phases, tasks), Quality Gates, Build, and Deploy — all orchestrated automatically.
+The agents guide you through each phase:
 
-### Monitor
+| Phase | What happens | You do |
+|-------|-------------|--------|
+| **DISCOVER** | Agents interview you about what you want to build | Answer questions about your project |
+| **PLAN** | Agents create PRD, architecture, UX spec, phases, and tasks | Review and approve the plan |
+| **BUILD** | Dev agent implements the code, task by task | Review code as it's built |
+| **DEPLOY** | DevOps agent handles git, deployment, and documentation | Confirm deployment settings |
+
+Quality gates run automatically between phases — if something doesn't meet the threshold, the system loops back and fixes it.
+
+### Monitor progress
 
 ```bash
 npx chati-dev status          # One-time snapshot
@@ -106,156 +105,160 @@ npx chati-dev status --watch  # Auto-refresh every 5s
 
 ---
 
+## Key Features
+
+| Feature | What it means |
+|---------|--------------|
+| **13 Specialized Agents** | Each agent has a defined mission, success criteria, and handoff protocol — not one AI trying to do everything |
+| **Quality Gates** | Every phase is validated before moving forward. Binary pass/fail — no subjective "looks good" |
+| **Context Persistence** | Sessions survive restarts. Close your IDE, come back next week — the system remembers everything |
+| **Session Lock** | Once activated, you stay inside the system. No accidentally "falling out" into generic AI mode |
+| **Multi-Terminal** | Autonomous agents run in parallel in separate terminals. Detail, Architect, and UX agents work simultaneously |
+| **Memory System** | The system learns from mistakes. Gotchas are captured automatically and recalled when relevant |
+| **IDE-Agnostic** | Works with Claude Code, VS Code, Cursor, Gemini CLI, GitHub Copilot, and AntiGravity |
+| **4 Languages** | Interface supports English, Portuguese, Spanish, and French. Artifacts are always generated in English |
+| **Supply Chain Security** | Every file is cryptographically signed. Tampered packages are blocked on install |
+
+---
+
 ## Architecture
 
-### 13 Agents, 5 Categories
+### 13 Agents, 4 Pipeline Phases
 
-| Category | Agents | Purpose |
-|----------|--------|---------|
-| **DISCOVER** | Greenfield WU, Brownfield WU, Brief | User Interaction & Discovery |
-| **PLAN** | Detail (PRD), Architect, UX, Phases, Tasks | Autonomous Planning |
-| **Quality** | QA-Planning, QA-Implementation | Validation & Gates |
-| **BUILD** | Dev | Implementation |
-| **DEPLOY** | DevOps | Shipping |
+| Phase | Agents | What they do |
+|-------|--------|-------------|
+| **DISCOVER** | Greenfield WU, Brownfield WU, Brief | Interview you, understand your project, extract requirements |
+| **PLAN** | Detail, Architect, UX, Phases, Tasks | Create PRD, design architecture, define UX, break work into phases and tasks |
+| **BUILD** | Dev | Implement code task by task, following the plan |
+| **DEPLOY** | DevOps | Handle git operations, deployment, and documentation |
+| **Quality** | QA-Planning, QA-Implementation | Validate plan coherence (≥95%) and code quality (≥95%) between phases |
 
-### Pipeline Flow
+### How the Pipeline Works
 
 ```
-User Request
-    │
-    ▼
-┌─────────────────────────────────────────────────┐
-│  ORCHESTRATOR (/chati) — Main Terminal           │
-│  Routes to correct agent, manages session        │
-│  Session Lock: user stays in system              │
-└─────────────────────────────────────────────────┘
-    │
-    ├── In-conversation ──┐
-    │                     ▼
-    │   ┌─── DISCOVER (interactive) ──┐
-    │   │  WU → Brief                 │
-    │   └─────────────────────────────┘
-    │
-    ├── Spawns terminals ──────────────────────────┐
-    │                                               ▼
-    │   ┌─── PLAN (autonomous) ─────── Parallel ───┐
-    │   │  Detail (opus) ──┐                       │
-    │   │  Architect (opus)├── run simultaneously  │
-    │   │  UX (sonnet) ────┘                       │
-    │   │  → Phases → Tasks                        │
-    │   └──────────────────────────────────────────┘
-    │
-    ├── Spawns terminal ──┐
-    │                     ▼
-    │   ┌─── QUALITY ─────────────────────────────┐
-    │   │  QA-Planning (opus) — ≥95% threshold     │
-    │   └──────────────────────────────────────────┘
-    │
-    ├── Spawns terminal(s) ┐
-    │                      ▼
-    │   ┌─── BUILD ───────────────────────────────┐
-    │   │  Dev (opus) — parallel for independent   │
-    │   └──────────────────────────────────────────┘
-    │
-    ├── Spawns terminal ──┐
-    │                     ▼
-    │   ┌─── QUALITY ─────────────────────────────┐
-    │   │  QA-Implementation (opus) — tests + SAST │
-    │   └──────────────────────────────────────────┘
-    │
-    └── Spawns terminal ──┐
-                          ▼
-        ┌─── DEPLOY ──────────────────────────────┐
-        │  DevOps (sonnet) — git + deploy + docs   │
-        └──────────────────────────────────────────┘
+ You type /chati
+       │
+       ▼
+ ┌──────────────────────────────────────────────┐
+ │  ORCHESTRATOR                                │
+ │  Routes you to the right agent.              │
+ │  Manages session state and handoffs.         │
+ └──────────────────────────────────────────────┘
+       │
+       ├─ In your conversation ─────────────────┐
+       │                                        │
+       │    DISCOVER (interactive)              │
+       │    WU interviews you → Brief compiles  │
+       │    requirements into a structured doc  │
+       │                                        │
+       ├─ Spawns separate terminals ────────────┐
+       │                                        │
+       │    PLAN (autonomous, parallel)         │
+       │    Detail ───┐                         │
+       │    Architect ├─ run simultaneously     │
+       │    UX ───────┘                         │
+       │    Then: Phases → Tasks                │
+       │                                        │
+       ├─ Quality Gate ─────────────────────────┐
+       │                                        │
+       │    QA-Planning validates the plan      │
+       │    Must score ≥ 95% to proceed         │
+       │                                        │
+       ├─ Spawns terminal(s) ───────────────────┐
+       │                                        │
+       │    BUILD                               │
+       │    Dev implements tasks (parallel      │
+       │    when tasks are independent)         │
+       │                                        │
+       ├─ Quality Gate ─────────────────────────┐
+       │                                        │
+       │    QA-Implementation validates code    │
+       │    Tests + static analysis + coverage  │
+       │                                        │
+       └─ Spawns terminal ──────────────────────┐
+                                                │
+            DEPLOY                              │
+            DevOps handles git, deploy, docs    │
+                                                │
+                                         ✓ Done │
 ```
 
 Each spawned terminal runs as a separate `claude -p --model <model>` process with its own context window, write-scope isolation, and structured handoff output.
 
 ### Intelligence Layer
 
-The Intelligence Layer operates transparently behind the pipeline:
+Three systems operate transparently behind the pipeline:
 
 | System | What it does |
 |--------|-------------|
-| **Context Engine PRISM** | 5-layer injection pipeline (Constitution → Global → Agent → Workflow → Task). 4 brackets (FRESH/MODERATE/DEPLETED/CRITICAL). Domain loading with graceful degradation. |
-| **Memory System RECALL** | Gotchas auto-capture with 3x/24h promotion. Per-agent memory CRUD. Session digests. Unified search across 4 cognitive sectors (Episodic, Semantic, Procedural, Reflective). |
-| **Decision Engine COMPASS** | Jaccard similarity for REUSE/ADAPT/CREATE decisions. BFS dependency analysis. Entity registry auto-update. 6 self-healing rules. |
-| **Session Lock** | Locks the session on `/chati` activation. All messages routed through orchestrator. Exit only via `/chati exit`. Prevents accidental context leakage. |
-
-### Universal Protocols
-
-Every agent follows 8 universal protocols:
-
-| Protocol | Purpose |
-|----------|---------|
-| 5.1 Dynamic Self-Validation | Binary pass/fail criteria per agent |
-| 5.2 Loop Until Done | Iterate until quality threshold met |
-| 5.3 Guided Options | Always present 1, 2, 3 choices |
-| 5.4 Persistence | Session state survives restarts |
-| 5.5 Two-Layer Handoff | Structured context transfer between agents |
-| 5.6 Language Protocol | Interaction in user lang, artifacts in English |
-| 5.7 Deviation Protocol | Handle scope changes mid-pipeline |
-| 5.8 Interaction Model | Agent-driven with power user escape hatch |
+| **Context Engine (PRISM)** | Injects the right context at the right time. 5 layers of context (from system-wide rules down to specific task details). Tracks how much context space remains and adapts automatically. |
+| **Memory System (RECALL)** | Remembers decisions, gotchas, and lessons across sessions. Organized into 4 sectors: what happened (episodic), what we know (semantic), how we do things (procedural), and what we learned (reflective). |
+| **Decision Engine (COMPASS)** | Before creating something new, checks if a similar component already exists. Decides whether to reuse, adapt, or create from scratch. Keeps a registry of all project entities. |
 
 ### Constitution
 
-The system is governed by a **17-article Constitution** that enforces agent behavior, quality standards, security, and system integrity. Key articles:
+The system is governed by a **17-article Constitution** that enforces agent behavior, quality standards, security, and system integrity:
 
-| Article | Governance |
-|---------|-----------|
-| I-IV | Agent governance, quality standards, memory & context, security |
-| V-VII | Communication protocol, design system, English-only documentation |
-| VIII-X | Two-layer handoff, agent-driven interaction, dynamic self-validation |
-| XI | Mode governance (planning/build/deploy) with autonomous transitions |
-| XII-XIV | Context bracket governance, memory governance, framework registry |
-| XV | Session lock governance — mandatory lock, explicit exit only |
-| XVI | Model governance — opus/sonnet/haiku per agent, no downgrade rule |
-| XVII | Execution mode governance — autonomous vs human-in-the-loop, safety net triggers |
+- **Agent Governance** — Every agent has a defined mission, scope, and success criteria
+- **Quality Standards** — Minimum 95% score on quality gates. Binary pass/fail, not subjective
+- **Security** — No secrets in system files. No destructive operations without confirmation
+- **Mode Governance** — Planning mode can't modify project code. Build mode has full access
+- **Session Lock** — Once activated, all messages route through the orchestrator
+- **Model Governance** — Each agent runs on its designated AI model (Opus, Sonnet, or Haiku)
+- **Execution Modes** — Autonomous and human-in-the-loop with safety net and circuit breaker
 
 ---
 
 ## Supported IDEs
 
-| IDE | Router Pattern |
-|-----|---------------|
+| IDE | How it connects |
+|-----|----------------|
 | **Claude Code** | `.claude/commands/chati.md` → orchestrator |
 | **VS Code** | `.vscode/chati.md` → orchestrator |
-| **AntiGravity** | Platform agent config → orchestrator |
 | **Cursor** | `.cursor/rules/chati.md` → orchestrator |
 | **Gemini CLI** | `.gemini/agents/chati.md` → orchestrator |
 | **GitHub Copilot** | `.github/copilot/chati.md` → orchestrator |
+| **AntiGravity** | Platform agent config → orchestrator |
+
+All IDEs use a thin router file that points to the same orchestrator. Your project works the same regardless of which IDE you use.
 
 ---
 
 ## CLI Commands
 
+### Setup & Maintenance
+
 | Command | Description |
 |---------|-------------|
-| `npx chati-dev init` | Initialize new project with wizard |
+| `npx chati-dev init` | Initialize new project with guided wizard |
 | `npx chati-dev install` | Install into existing project |
 | `npx chati-dev status` | Show project dashboard |
 | `npx chati-dev status --watch` | Auto-refresh dashboard every 5s |
-| `npx chati-dev check-update` | Check for system updates |
+| `npx chati-dev health` | Run system health check (5 checks) |
+| `npx chati-dev check-update` | Check for updates |
 | `npx chati-dev upgrade` | Upgrade to latest version |
 | `npx chati-dev upgrade --version X.Y.Z` | Upgrade to specific version |
-| `npx chati-dev memory stats` | Show memory statistics (total, by agent/sector/tier) |
-| `npx chati-dev memory list` | List memories (--agent, --sector, --tier filters) |
-| `npx chati-dev memory search <query>` | Search memories by tags or content |
-| `npx chati-dev memory clean` | Clean expired/session memories (--dry-run) |
-| `npx chati-dev context` | Show context bracket advisory |
-| `npx chati-dev registry stats` | Show entity registry statistics |
-| `npx chati-dev registry check` | Validate entity registry against filesystem |
-| `npx chati-dev health` | Comprehensive system health check (5 checks) |
-| `npx chati-dev changelog` | View changelog |
 | `npx chati-dev --reconfigure` | Reconfigure installation |
+| `npx chati-dev changelog` | View changelog |
 
-### Orchestrator Commands (inside active session)
+### Memory & Context
+
+| Command | Description |
+|---------|-------------|
+| `npx chati-dev memory stats` | Show memory statistics |
+| `npx chati-dev memory list` | List memories (filter by --agent, --sector, --tier) |
+| `npx chati-dev memory search <query>` | Search memories by tags or content |
+| `npx chati-dev memory clean` | Clean expired memories (--dry-run to preview) |
+| `npx chati-dev context` | Show context bracket status |
+| `npx chati-dev registry stats` | Show entity registry statistics |
+| `npx chati-dev registry check` | Validate registry against filesystem |
+
+### Inside an Active Session
 
 | Command | Description |
 |---------|-------------|
 | `/chati` | Start or resume session |
-| `/chati status` | Show pipeline status |
+| `/chati status` | Show pipeline progress |
 | `/chati help` | Show available commands |
 | `/chati resume` | Resume from continuation file |
 | `/chati exit` | Save session and exit |
@@ -268,58 +271,44 @@ The system is governed by a **17-article Constitution** that enforces agent beha
 your-project/
 ├── .chati/
 │   ├── session.yaml              # Session state (auto-managed, gitignored)
-│   └── memories/                 # Memory Layer storage (gitignored)
+│   └── memories/                 # Memory storage (gitignored)
 ├── .claude/
 │   ├── commands/
 │   │   └── chati.md              # Thin router → orchestrator
 │   └── rules/
-│       └── chati/                # Framework context (auto-loaded by Claude Code)
-│           ├── root.md           # System overview + key references
-│           ├── governance.md     # Constitution key rules
-│           ├── protocols.md      # 8 universal protocols
+│       └── chati/                # Framework context (auto-loaded)
+│           ├── root.md           # System overview
+│           ├── governance.md     # Constitution rules
+│           ├── protocols.md      # Universal protocols
 │           └── quality.md        # Quality standards
-├── CLAUDE.md                     # Minimal project context (auto-generated)
-├── CLAUDE.local.md               # Runtime state — session lock, current agent (gitignored)
-├── docs/
-│   └── CHANGELOG.md              # Version history
+├── CLAUDE.md                     # Project context (auto-generated)
+├── CLAUDE.local.md               # Runtime state (gitignored)
 ├── chati.dev/
 │   ├── orchestrator/             # Main orchestrator
 │   ├── agents/                   # 13 agent definitions
-│   │   ├── discover/              # 3 discover agents (WU, Brief)
-│   │   ├── plan/                  # 5 plan agents (Detail, Architect, UX, Phases, Tasks)
-│   │   ├── quality/              # 2 quality gate agents
-│   │   ├── build/                # Dev agent
-│   │   └── deploy/               # DevOps agent
-│   ├── tasks/                    # 72 task definitions (YAML frontmatter)
+│   │   ├── discover/             # Greenfield WU, Brownfield WU, Brief
+│   │   ├── plan/                 # Detail, Architect, UX, Phases, Tasks
+│   │   ├── quality/              # QA-Planning, QA-Implementation
+│   │   ├── build/                # Dev
+│   │   └── deploy/               # DevOps
+│   ├── tasks/                    # 73 task definitions
 │   ├── workflows/                # 6 workflow blueprints
 │   ├── templates/                # 6 artifact templates
-│   ├── schemas/                  # 5 JSON schemas for validation
-│   ├── intelligence/             # Context Engine, Memory Layer, Decision Engine
-│   ├── domains/                  # Domain loading configs (per-agent, per-workflow)
-│   ├── hooks/                    # 6 Claude Code hooks (enforcement)
-│   ├── context/                  # Context source files (deployed to .claude/rules/)
-│   ├── frameworks/               # Decision heuristics, quality dims
+│   ├── schemas/                  # 5 JSON schemas
+│   ├── intelligence/             # PRISM, RECALL, COMPASS specs
+│   ├── domains/                  # Per-agent and per-workflow configs
+│   ├── hooks/                    # 6 Claude Code hooks
+│   ├── context/                  # Context files (deployed to .claude/rules/)
+│   ├── frameworks/               # Decision heuristics
 │   ├── quality-gates/            # Planning & implementation gates
 │   ├── patterns/                 # Elicitation patterns
-│   ├── data/                     # Entity registry (50 artifacts)
+│   ├── data/                     # Entity registry
 │   ├── i18n/                     # EN, PT, ES, FR translations
 │   ├── migrations/               # Version migration scripts
 │   ├── constitution.md           # 17 Articles + Preamble
-│   ├── config.yaml               # System configuration
-│   └── artifacts/                # Generated during pipeline
-│       ├── 0-WU/
-│       ├── 1-Brief/
-│       ├── 2-PRD/
-│       ├── 3-Architecture/
-│       ├── 4-UX/
-│       ├── 5-Phases/
-│       ├── 6-Tasks/
-│       ├── 7-QA-Planning/
-│       ├── 8-Validation/
-│       └── handoffs/
+│   └── config.yaml               # System configuration
 └── packages/
-    └── chati-dev/                # CLI + runtime engine (npx chati-dev)
-        └── src/terminal/         # Multi-terminal spawner, monitor, collector
+    └── chati-dev/                # CLI + runtime engine
 ```
 
 ---
@@ -353,15 +342,15 @@ Upgrades include automatic backup, migrations, validation, and config merging. R
 
 ## Contributing
 
-We welcome contributions from agents, templates, workflows, intelligence data, translations, and CLI improvements. Please see [CONTRIBUTING.md](.github/CONTRIBUTING.md) for guidelines.
+We welcome contributions — agents, templates, workflows, translations, and CLI improvements. See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for guidelines.
 
 ## Security
 
-For security concerns, please see our [Security Policy](.github/SECURITY.md).
+For security concerns, see our [Security Policy](.github/SECURITY.md).
 
 ## License
 
-This project is licensed under the Business Source License 1.1 — see [LICENSE](LICENSE) for details. Free for personal, educational, and evaluation use. Converts to Apache 2.0 on 2030-02-16.
+[MIT](LICENSE)
 
 ---
 

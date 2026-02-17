@@ -4,8 +4,8 @@
 
 | Version | Supported |
 |---------|-----------|
-| 2.0.x | :white_check_mark: Current |
-| < 2.0 | :x: Not supported — upgrade to 2.0.x |
+| 2.1.x | :white_check_mark: Current |
+| < 2.1 | :x: Not supported — upgrade to 2.1.x |
 
 We recommend always running the latest version. Use `npx chati-dev check-update` to verify.
 
@@ -18,7 +18,7 @@ If you discover a security vulnerability in Chati.dev, please report it responsi
 ### How to Report
 
 1. **Do NOT** open a public GitHub issue for security vulnerabilities
-2. Use [GitHub Security Advisories](https://github.com/Chati-dev/Chati.dev/security/advisories/new) to report privately
+2. Email **security@chati.dev** with details
 3. Include:
    - Description of the vulnerability
    - Steps to reproduce
@@ -26,23 +26,7 @@ If you discover a security vulnerability in Chati.dev, please report it responsi
    - Affected versions
    - Suggested fix (if any)
 
-### Response Timeline
-
-| Stage | Timeline |
-|-------|----------|
-| **Acknowledgment** | Within 48 hours |
-| **Initial assessment** | Within 5 business days |
-| **Fix development** | Depends on severity (see below) |
-| **Patch release** | Coordinated with reporter |
-
-### Severity Classification
-
-| Severity | Response Time | Examples |
-|----------|--------------|---------|
-| **Critical** | 72 hours | Remote code execution, credential exposure |
-| **High** | 1 week | Agent prompt injection allowing system escape, path traversal in installer |
-| **Medium** | 2 weeks | Information disclosure, insecure defaults |
-| **Low** | Next release | Minor configuration issues, cosmetic security warnings |
+We will acknowledge your report, assess severity, and coordinate a fix with you.
 
 ---
 
@@ -145,10 +129,10 @@ When using Chati.dev:
 
 ## Disclosure Policy
 
-We follow [responsible disclosure](https://en.wikipedia.org/wiki/Responsible_disclosure):
+We follow responsible disclosure:
 
-1. Reporter submits vulnerability via [GitHub Security Advisories](https://github.com/Chati-dev/Chati.dev/security/advisories/new)
-2. We acknowledge receipt within 48 hours
+1. Reporter submits vulnerability via **security@chati.dev**
+2. We acknowledge receipt and assess severity
 3. We develop and test a fix
 4. We coordinate release timing with the reporter
 5. We publish the fix with a security advisory
