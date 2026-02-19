@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.5] - 2026-02-19
+
+### Fixed
+
+- **Orchestrator auto-start for fresh installs**: When session.yaml exists (created by installer) but no agent has run yet, the orchestrator now skips the "Continue with X? (1/2/3)" prompt and immediately activates the first agent (greenfield-wu or brownfield-wu). This eliminates the confusing "resume" UX on first `/chati` invocation after install.
+
+### Stats
+
+- 1207 tests passing, 0 failures
+
 ## [3.0.4] - 2026-02-19
 
 ### Fixed
