@@ -7,7 +7,7 @@
  *
  * Provider conventions (verified Feb 2026):
  * - Gemini CLI: auto-loads GEMINI.md, uses .gemini/commands/*.toml, no rules/
- * - Codex CLI:  auto-loads AGENTS.md, uses .codex/commands/*.md for /chati
+ * - Codex CLI:  auto-loads AGENTS.md, uses .agents/skills/chati/SKILL.md for $chati
  * - Copilot CLI: auto-loads AGENTS.md + CLAUDE.md + GEMINI.md natively (no COPILOT.md needed)
  */
 

@@ -43,10 +43,10 @@ export const IDE_CONFIGS = {
     name: 'Codex CLI',
     description: 'OpenAI Codex terminal agent',
     recommended: false,
-    configPath: '.codex/commands/',
+    configPath: '.agents/skills/chati/',
     rulesFile: 'AGENTS.md',
     mcpConfigFile: null,
-    formatNotes: 'Markdown command format',
+    formatNotes: 'Codex skill format (SKILL.md with YAML frontmatter)',
   },
   'gemini-cli': {
     name: 'Gemini CLI',

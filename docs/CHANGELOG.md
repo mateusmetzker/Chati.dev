@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.3] - 2026-02-19
+
+### Fixed
+
+- **Codex CLI Skill System**: Replaced non-functional `.codex/commands/chati.md` with proper `.agents/skills/chati/SKILL.md` (Codex native skill format)
+- **Codex Quick Start**: Now shows `$chati` (skill invocation) instead of `/chati` (not supported by Codex)
+
+### Changed
+
+- `generateCodexRouter()` renamed to `generateCodexSkill()` — outputs SKILL.md with YAML frontmatter
+- `codex-cli` configPath changed from `.codex/commands/` to `.agents/skills/chati/`
+- Codex skill includes `description` field for implicit invocation (Codex auto-detects intent)
+
+### Stats
+
+- 1208 tests passing, 0 failures
+
 ## [3.0.2] - 2026-02-19
 
 ### Fixed

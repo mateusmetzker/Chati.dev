@@ -120,7 +120,11 @@ export async function runWizard(targetDir, options = {}) {
     // Show quick start — same experience across all providers
     const primaryIDE = selectedIDEs[selectedIDEs.length - 1];
     const primaryIDEName = IDE_CONFIGS[primaryIDE]?.name || primaryIDE;
-    const invokeCmd = primaryIDE === 'github-copilot' ? '@chati' : '/chati';
+    const invokeCmdMap = {
+      'github-copilot': '@chati',
+      'codex-cli': '$chati',
+    };
+    const invokeCmd = invokeCmdMap[primaryIDE] || '/chati';
     showQuickStart(t('installer.quick_start_title'), [
       `${t('installer.quick_start_1')} (${primaryIDEName})`,
       `Type: ${invokeCmd}`,

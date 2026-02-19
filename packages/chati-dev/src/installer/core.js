@@ -3,7 +3,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { IDE_CONFIGS } from '../config/ide-configs.js';
 import { generateClaudeMCPConfig } from '../config/mcp-configs.js';
-import { generateSessionYaml, generateConfigYaml, generateClaudeMd, generateClaudeLocalMd, generateCodexRouter, generateGeminiRouter, generateCopilotAgent } from './templates.js';
+import { generateSessionYaml, generateConfigYaml, generateClaudeMd, generateClaudeLocalMd, generateCodexSkill, generateGeminiRouter, generateCopilotAgent } from './templates.js';
 import { generateContextFiles } from '../config/context-file-generator.js';
 import { verifyManifest } from './manifest.js';
 
@@ -302,8 +302,9 @@ Pass through all context: session state, handoffs, artifacts, and user input.
       );
     }
   } else if (ideKey === 'codex-cli') {
-    // Codex CLI: /chati slash command via .codex/commands/
-    writeFileSync(join(targetDir, '.codex', 'commands', 'chati.md'), generateCodexRouter(), 'utf-8');
+    // Codex CLI: chati skill via .agents/skills/chati/SKILL.md (invoke with $chati)
+    createDir(join(targetDir, '.agents', 'skills', 'chati'));
+    writeFileSync(join(targetDir, '.agents', 'skills', 'chati', 'SKILL.md'), generateCodexSkill(), 'utf-8');
   } else if (ideKey === 'gemini-cli') {
     // Gemini CLI: TOML command file (native format for /chati command)
     writeFileSync(join(targetDir, '.gemini', 'commands', 'chati.toml'), generateGeminiRouter(), 'utf-8');

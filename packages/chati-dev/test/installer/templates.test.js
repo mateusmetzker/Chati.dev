@@ -1,7 +1,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import yaml from 'js-yaml';
-import { generateSessionYaml, generateConfigYaml, generateClaudeMd, generateClaudeLocalMd, generateCodexRouter, generateGeminiRouter, generateCopilotAgent } from '../../src/installer/templates.js';
+import { generateSessionYaml, generateConfigYaml, generateClaudeMd, generateClaudeLocalMd, generateCodexSkill, generateGeminiRouter, generateCopilotAgent } from '../../src/installer/templates.js';
 
 const testConfig = {
   projectName: 'test-project',
@@ -340,37 +340,43 @@ describe('generateCopilotAgent', () => {
   });
 });
 
-describe('generateCodexRouter', () => {
-  it('returns a non-empty markdown string', () => {
-    const result = generateCodexRouter();
+describe('generateCodexSkill', () => {
+  it('returns a non-empty string with YAML frontmatter', () => {
+    const result = generateCodexSkill();
     assert.ok(typeof result === 'string');
     assert.ok(result.length > 0);
-    assert.ok(result.startsWith('#'), 'Should start with markdown heading');
+    assert.ok(result.startsWith('---'), 'Should start with YAML frontmatter delimiter');
   });
 
-  it('is a thin router (same pattern as Claude Code)', () => {
-    const result = generateCodexRouter();
-    assert.ok(result.includes('Thin Router'), 'Should be a thin router');
+  it('has name and description in frontmatter', () => {
+    const result = generateCodexSkill();
+    assert.ok(result.includes('name: chati'), 'Should have skill name');
+    assert.ok(result.includes('description:'), 'Should have skill description');
   });
 
   it('includes language override section', () => {
-    const result = generateCodexRouter();
+    const result = generateCodexSkill();
     assert.ok(result.includes('Language Override'));
     assert.ok(result.includes('session.yaml'));
   });
 
   it('references the orchestrator', () => {
-    const result = generateCodexRouter();
+    const result = generateCodexSkill();
     assert.ok(result.includes('chati.dev/orchestrator/chati.md'));
   });
 
   it('references AGENTS.md as context file', () => {
-    const result = generateCodexRouter();
+    const result = generateCodexSkill();
     assert.ok(result.includes('AGENTS.md'));
   });
 
+  it('includes $ARGUMENTS placeholder', () => {
+    const result = generateCodexSkill();
+    assert.ok(result.includes('$ARGUMENTS'), 'Should include $ARGUMENTS for user input');
+  });
+
   it('does not reference Claude Code', () => {
-    const result = generateCodexRouter();
+    const result = generateCodexSkill();
     assert.ok(!result.includes('Claude Code'));
     assert.ok(!result.includes('CLAUDE.md'));
   });

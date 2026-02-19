@@ -264,17 +264,23 @@ describe('installFramework with codex-cli (standalone)', () => {
     rmSync(tempDir, { recursive: true, force: true });
   });
 
-  it('creates .codex/commands/ directory', () => {
-    assert.ok(existsSync(join(tempDir, '.codex', 'commands')));
+  it('creates .agents/skills/chati/ directory', () => {
+    assert.ok(existsSync(join(tempDir, '.agents', 'skills', 'chati')));
   });
 
-  it('creates .codex/commands/chati.md (/chati slash command)', () => {
-    const routerPath = join(tempDir, '.codex', 'commands', 'chati.md');
-    assert.ok(existsSync(routerPath), 'Should create chati.md command');
-    const content = readFileSync(routerPath, 'utf-8');
-    assert.ok(content.includes('Thin Router'), 'Should be a thin router');
+  it('creates .agents/skills/chati/SKILL.md ($chati skill)', () => {
+    const skillPath = join(tempDir, '.agents', 'skills', 'chati', 'SKILL.md');
+    assert.ok(existsSync(skillPath), 'Should create SKILL.md');
+    const content = readFileSync(skillPath, 'utf-8');
+    assert.ok(content.includes('name: chati'), 'Should have skill name in frontmatter');
+    assert.ok(content.includes('description:'), 'Should have skill description');
     assert.ok(content.includes('orchestrator'), 'Should reference orchestrator');
     assert.ok(content.includes('AGENTS.md'), 'Should reference AGENTS.md');
+  });
+
+  it('does NOT create .codex/commands/ (deprecated path)', () => {
+    assert.ok(!existsSync(join(tempDir, '.codex', 'commands')),
+      'Should NOT create .codex/commands/ (Codex uses .agents/skills/)');
   });
 
   it('does NOT create .claude/ when Claude is not selected', () => {
