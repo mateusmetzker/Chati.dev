@@ -136,9 +136,10 @@ function buildReplacementConfig(provider) {
     { pattern: /(\|\s*)haiku(\s*\|)/g, replacement: `$1${minimal}$2` },
 
     // Upgrade/downgrade conditions in prose: "sonnet if ...", "opus if ..."
-    { pattern: /opus if /g, replacement: `${deep} if ` },
-    { pattern: /sonnet if /g, replacement: `${light} if ` },
-    { pattern: /haiku if /g, replacement: `${minimal} if ` },
+    // Negative lookbehind prevents double-prefix when deep model contains a tier name (e.g. claude-sonnet)
+    { pattern: /(?<!-)opus if /g, replacement: `${deep} if ` },
+    { pattern: /(?<!-)sonnet if /g, replacement: `${light} if ` },
+    { pattern: /(?<!-)haiku if /g, replacement: `${minimal} if ` },
 
     // Constitution/governance model tier definitions
     { pattern: /\*\*opus\*\*:/g, replacement: `**${deep}**:` },

@@ -358,6 +358,43 @@ describe('adaptFrameworkFile — replacement ordering', () => {
 });
 
 // ---------------------------------------------------------------------------
+// Double-prefix regression (copilot: claude-claude-sonnet bug)
+// ---------------------------------------------------------------------------
+
+describe('adaptFrameworkFile — no double-prefix (copilot)', () => {
+  it('does NOT produce claude-claude-sonnet from opus→claude-sonnet + sonnet if', () => {
+    const content = '- **Model**: sonnet | upgrade: opus if complex routing';
+    const result = adaptFrameworkFile(content, 'orchestrator/chati.md', 'copilot');
+    assert.ok(!result.includes('claude-claude-'), 'Should not have double-prefix');
+    assert.ok(result.includes('claude-sonnet'));
+  });
+
+  it('does NOT produce double-prefix in agent Identity with conditional upgrade', () => {
+    const content = '- **Model**: haiku | upgrade: sonnet if enterprise';
+    const result = adaptFrameworkFile(content, 'agents/discover/greenfield-wu.md', 'copilot');
+    assert.ok(!result.includes('claude-claude-'), 'Should not have double-prefix');
+    assert.ok(result.includes('gpt-5'));
+    assert.ok(result.includes('claude-sonnet if'));
+  });
+
+  it('does NOT produce double-prefix with multiple model refs on same line', () => {
+    const content = '- **Model**: opus | downgrade: sonnet if simple, haiku if trivial';
+    const result = adaptFrameworkFile(content, 'agents/build/dev.md', 'copilot');
+    assert.ok(!result.includes('claude-claude-'), 'Should not have double-prefix');
+  });
+
+  it('handles sequential opus if → sonnet if without compounding', () => {
+    const content = 'Use opus if complex.\nUse sonnet if moderate.\nUse haiku if simple.';
+    const result = adaptFrameworkFile(content, 'constitution.md', 'copilot');
+    assert.ok(!result.includes('claude-claude-'), 'Should not have double-prefix');
+    const lines = result.split('\n');
+    assert.ok(lines[0].includes('claude-sonnet if'));
+    assert.ok(lines[1].includes('claude-sonnet if'));
+    assert.ok(lines[2].includes('gpt-5 if'));
+  });
+});
+
+// ---------------------------------------------------------------------------
 // All providers: comprehensive model mapping via PROVIDER_MODEL_MAPS
 // ---------------------------------------------------------------------------
 
