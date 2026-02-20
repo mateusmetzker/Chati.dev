@@ -387,4 +387,25 @@ CLAUDE.local.md is auto-gitignored`;
     assert.ok(result.includes('fallback_provider: codex'));
     assert.ok(result.includes('primary provider: codex'));
   });
+
+  it('replaces /chati command with $chati for codex', () => {
+    const content = 'Type `/chati` to start. Exit with `/chati exit`.';
+    const result = adaptFrameworkFile(content, 'orchestrator/chati.md', 'codex');
+    assert.ok(result.includes('$chati'), 'Should replace /chati with $chati');
+    assert.ok(!result.includes('/chati'), 'Should not preserve /chati');
+  });
+
+  it('does NOT replace /chati in file paths for codex', () => {
+    const content = 'Read `chati.dev/orchestrator/chati.md` and follow routing logic.';
+    const result = adaptFrameworkFile(content, 'orchestrator/chati.md', 'codex');
+    assert.ok(result.includes('orchestrator/chati.md'), 'Should preserve /chati.md in file paths');
+    assert.ok(!result.includes('orchestrator$chati'), 'Should NOT corrupt file paths');
+  });
+
+  it('does NOT replace /chati for gemini (gemini uses /chati)', () => {
+    const content = 'Type `/chati` to start.';
+    const result = adaptFrameworkFile(content, 'orchestrator/chati.md', 'gemini');
+    assert.ok(result.includes('/chati'), 'Gemini should keep /chati');
+    assert.ok(!result.includes('$chati'), 'Gemini should NOT have $chati');
+  });
 });

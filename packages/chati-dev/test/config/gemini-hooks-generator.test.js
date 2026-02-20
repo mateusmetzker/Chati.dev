@@ -152,41 +152,58 @@ describe('generateGeminiSettings', () => {
     assert.ok(parsed, 'Should parse as JSON');
   });
 
-  it('has hooks array', () => {
+  it('has hooks as object keyed by event name', () => {
     const parsed = JSON.parse(generateGeminiSettings());
-    assert.ok(Array.isArray(parsed.hooks));
+    assert.ok(typeof parsed.hooks === 'object' && !Array.isArray(parsed.hooks),
+      'hooks should be an object, not an array');
   });
 
-  it('has 6 hook entries', () => {
+  it('has 3 event types (BeforeModel, BeforeTool, PreCompress)', () => {
     const parsed = JSON.parse(generateGeminiSettings());
-    assert.equal(parsed.hooks.length, 6);
+    const events = Object.keys(parsed.hooks);
+    assert.equal(events.length, 3);
+    assert.ok(events.includes('BeforeModel'));
+    assert.ok(events.includes('BeforeTool'));
+    assert.ok(events.includes('PreCompress'));
   });
 
-  it('has 2 BeforeModel hooks', () => {
+  it('BeforeModel group has 2 hooks (prism-engine, model-governance)', () => {
     const parsed = JSON.parse(generateGeminiSettings());
-    const beforeModel = parsed.hooks.filter(h => h.event === 'BeforeModel');
-    assert.equal(beforeModel.length, 2);
+    const group = parsed.hooks.BeforeModel[0];
+    assert.equal(group.hooks.length, 2);
+    const names = group.hooks.map(h => h.name);
+    assert.ok(names.includes('prism-engine'));
+    assert.ok(names.includes('model-governance'));
   });
 
-  it('has 3 BeforeTool hooks', () => {
+  it('BeforeTool group has 3 hooks and a matcher', () => {
     const parsed = JSON.parse(generateGeminiSettings());
-    const beforeTool = parsed.hooks.filter(h => h.event === 'BeforeTool');
-    assert.equal(beforeTool.length, 3);
+    const group = parsed.hooks.BeforeTool[0];
+    assert.equal(group.hooks.length, 3);
+    assert.ok(group.matcher, 'BeforeTool should have a matcher');
+    const names = group.hooks.map(h => h.name);
+    assert.ok(names.includes('mode-governance'));
+    assert.ok(names.includes('constitution-guard'));
+    assert.ok(names.includes('read-protection'));
   });
 
-  it('has 1 PreCompress hook', () => {
+  it('PreCompress group has 1 hook (session-digest)', () => {
     const parsed = JSON.parse(generateGeminiSettings());
-    const preCompress = parsed.hooks.filter(h => h.event === 'PreCompress');
-    assert.equal(preCompress.length, 1);
+    const group = parsed.hooks.PreCompress[0];
+    assert.equal(group.hooks.length, 1);
+    assert.equal(group.hooks[0].name, 'session-digest');
   });
 
-  it('all hooks have path and event fields', () => {
+  it('all hooks have type=command and command field', () => {
     const parsed = JSON.parse(generateGeminiSettings());
-    for (const hook of parsed.hooks) {
-      assert.ok(hook.path, 'Should have path');
-      assert.ok(hook.event, 'Should have event');
-      assert.ok(hook.path.startsWith('.gemini/hooks/'), `Path should be in .gemini/hooks/: ${hook.path}`);
-      assert.ok(hook.path.endsWith('.js'), `Path should end with .js: ${hook.path}`);
+    for (const [event, groups] of Object.entries(parsed.hooks)) {
+      for (const group of groups) {
+        for (const hook of group.hooks) {
+          assert.equal(hook.type, 'command', `${hook.name} should have type=command`);
+          assert.ok(hook.command, `${hook.name} should have command field`);
+          assert.ok(hook.command.includes('.gemini/hooks/'), `${hook.name} command should reference .gemini/hooks/`);
+        }
+      }
     }
   });
 });

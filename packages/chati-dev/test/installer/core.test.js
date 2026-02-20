@@ -377,12 +377,15 @@ describe('installFramework with gemini-cli — CLI Parity', () => {
     }
   });
 
-  it('creates .gemini/settings.json with hook config', () => {
+  it('creates .gemini/settings.json with hook config (object keyed by event)', () => {
     const settingsPath = join(tempDir, '.gemini', 'settings.json');
     assert.ok(existsSync(settingsPath), 'Should create settings.json');
     const content = JSON.parse(readFileSync(settingsPath, 'utf-8'));
-    assert.ok(Array.isArray(content.hooks), 'Should have hooks array');
-    assert.equal(content.hooks.length, 6, 'Should have 6 hooks');
+    assert.ok(typeof content.hooks === 'object' && !Array.isArray(content.hooks),
+      'hooks should be an object, not an array');
+    assert.ok(content.hooks.BeforeModel, 'Should have BeforeModel event');
+    assert.ok(content.hooks.BeforeTool, 'Should have BeforeTool event');
+    assert.ok(content.hooks.PreCompress, 'Should have PreCompress event');
   });
 
   it('GEMINI.md has 5 @import directives', () => {

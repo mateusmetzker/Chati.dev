@@ -103,11 +103,6 @@ function buildReplacementConfig(provider) {
     ['/model haiku', `/model ${minimal}`],
   ];
 
-  // Codex CLI uses $chati for skill invocation, not /chati
-  if (provider === 'codex') {
-    strings.push(['/chati', '$chati']);
-  }
-
   // --- Regex patterns for model names in structured contexts ---
   const patterns = [
     // Identity section: **Model**: opus | ...
@@ -174,6 +169,15 @@ function buildReplacementConfig(provider) {
     { pattern: /### CLAUDE\.md Final Update/g, replacement: `### ${contextFile} Final Update` },
     { pattern: /Update CLAUDE\.md/g, replacement: `Update ${contextFile}` },
   ];
+
+  // Codex CLI uses $chati for skill invocation, not /chati.
+  // Lookbehind prevents replacing /chati in file paths (e.g., orchestrator/chati.md).
+  if (provider === 'codex') {
+    patterns.push({
+      pattern: /(?<![/\w])\/chati/g,
+      replacement: '$$chati',
+    });
+  }
 
   return { strings, patterns };
 }

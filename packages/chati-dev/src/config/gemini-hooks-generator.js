@@ -482,13 +482,39 @@ export function generateAllGeminiHooks() {
 /**
  * Generate .gemini/settings.json content with hook configuration.
  *
+ * Gemini CLI expects hooks as an object keyed by event name, where each
+ * event contains an array of hook groups. Each group has an optional
+ * `matcher` and a `hooks` array with `{ name, type, command }` entries.
+ *
  * @returns {string} JSON string for .gemini/settings.json
  */
 export function generateGeminiSettings() {
-  const hooks = Object.entries(HOOK_MAP).map(([name, config]) => ({
-    path: `.gemini/hooks/${name}.js`,
-    event: config.event,
-  }));
+  // Group hooks by event
+  const eventGroups = {};
+  for (const [name, config] of Object.entries(HOOK_MAP)) {
+    if (!eventGroups[config.event]) {
+      eventGroups[config.event] = [];
+    }
+    eventGroups[config.event].push({
+      name,
+      type: 'command',
+      command: `node .gemini/hooks/${name}.js`,
+      description: config.description,
+    });
+  }
+
+  // Build the settings object: each event → array of hook groups
+  const hooks = {};
+  for (const [event, hookList] of Object.entries(eventGroups)) {
+    // Tool events (BeforeTool) use matcher; lifecycle events don't
+    const isToolEvent = event.includes('Tool');
+    hooks[event] = [
+      {
+        ...(isToolEvent ? { matcher: '.*' } : {}),
+        hooks: hookList,
+      },
+    ];
+  }
 
   return JSON.stringify({ hooks }, null, 2) + '\n';
 }
